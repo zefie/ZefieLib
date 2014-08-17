@@ -574,30 +574,16 @@ namespace ZefieCmd
         }
         private static void hashcmd(string file, string hashtype)
         {
-            string hash = null;
             Zefie.Data.BlockSize = readblock;
             if (file != null)
             {
                 if (File.Exists(file))
                 {
-                    switch (hashtype)
-                    {
-                        case "md5":
-                            hash = Zefie.Data.Hashing.MD5File(file);
-                            break;
-                        case "sha1":
-                            hash = Zefie.Data.Hashing.SHA1File(file);
-                            break;
-                        case "sha256":
-                            hash = Zefie.Data.Hashing.SHA256File(file);
-                            break;
-                        case "sha384":
-                            hash = Zefie.Data.Hashing.SHA384File(file);
-                            break;
-                        case "sha512":
-                            hash = Zefie.Data.Hashing.SHA512File(file);
-                            break;
-                    }
+                    w(doHash(file, hashtype));
+                    if (quiet)
+                        w("\n");
+                    else
+                        w("\t" + file + "\n");
                 }
                 else
                 {
@@ -605,41 +591,51 @@ namespace ZefieCmd
                     return;
                 }
             }
-            w(hash);
+        }
+        private static void hashcmd(string hashtype)
+        {
+            string file = "-";
+            byte[] data = Zefie.Data.readFromStdin();
+            w(doHash(data, hashtype));
+            data = null;
             if (quiet)
                 w("\n");
             else
                 w("\t" + file + "\n");
         }
-        private static void hashcmd(string hashtype)
+        private static string doHash(byte[] data, string hashtype)
         {
-            string hash = null;
-            string file = "-";
-                byte[] data = Zefie.Data.readFromStdin();
-                switch (hashtype)
-                {
-                    case "md5":
-                        hash = Zefie.Data.Hashing.MD5(data);
-                        break;
-                    case "sha1":
-                        hash = Zefie.Data.Hashing.SHA1(data);
-                        break;
-                    case "sha256":
-                        hash = Zefie.Data.Hashing.SHA256(data);
-                        break;
-                    case "sha384":
-                        hash = Zefie.Data.Hashing.SHA384(data);
-                        break;
-                    case "sha512":
-                        hash = Zefie.Data.Hashing.SHA512(data);
-                        break;
-                }
-                data = null;
-            w(hash);
-            if (quiet)
-                w("\n");
-            else
-                w("\t" + file + "\n");
+            switch (hashtype)
+            {
+                case "md5":
+                    return Zefie.Data.Hashing.MD5(data);
+                case "sha1":
+                    return Zefie.Data.Hashing.SHA1(data);
+                case "sha256":
+                    return Zefie.Data.Hashing.SHA256(data);
+                case "sha384":
+                    return Zefie.Data.Hashing.SHA384(data);
+                case "sha512":
+                    return Zefie.Data.Hashing.SHA512(data);
+            }
+            return null;
+        }
+        private static string doHash(string file, string hashtype)
+        {
+            switch (hashtype)
+            {
+                case "md5":
+                    return Zefie.Data.Hashing.MD5File(file);
+                case "sha1":
+                    return Zefie.Data.Hashing.SHA1File(file);
+                case "sha256":
+                    return Zefie.Data.Hashing.SHA256File(file);
+                case "sha384":
+                    return Zefie.Data.Hashing.SHA384File(file);
+                case "sha512":
+                    return Zefie.Data.Hashing.SHA512File(file);
+            }
+            return null;
         }
         private static void encrypt(string passwd, string data, bool rawdata)
         {

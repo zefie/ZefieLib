@@ -73,7 +73,7 @@ namespace ZefieCmd
                 wl("\tmsgbox errordialog confirmdialog promptdialog");
                 wl(null);
                 wl("Acceptable Values:");
-                wl("\tmessage text [title]");
+                wl("\t(message text) [title]");
                 wl(null);
                 wl("Random Hex String:");
                 wl("\tgenhex");
@@ -102,11 +102,8 @@ namespace ZefieCmd
                 wl(null);
                 wl("Other stuff:");
                 wl("substring (string) (start) (length)");
-                wl("contains (haystack) (needle)");
-                //wl("contains (haystack) (needle)");
-
-
-
+                wl("contains (haystack) (needle) - Returns bool");
+                wl("drivelabel (label) - Returns X:\\, where X = Drive Letter. null if not found.");
             }
             exit(0);
         }
@@ -146,6 +143,12 @@ namespace ZefieCmd
         private static int readblock = 4096;
         static void Main(string[] args)
         {
+            // This allows you to rename the exe to any available command within
+            // and it will execute that command on default.
+            // For example, if you named this exe "md5.exe",
+            // Then executed "echo test | md5.exe", you would get
+            // a55ab7512f0d0ff4527d898d06afd5c5        -
+
             if (!doCmd(args,true))
             {
                 List<string> mew = new List<string>();
@@ -189,33 +192,20 @@ namespace ZefieCmd
                 switch (args[0].ToLower())
                 {
                     case "md5":
-                        {
-                            for (int i = 1; i < args.Count(); i++)
-                                hashcmd(args[i], "md5");
-                            break;
-                        }
                     case "sha1":
-                        {
-                            for (int i = 1; i < args.Count(); i++)
-                                hashcmd(args[i], "sha1");
-                            break;
-                        }
                     case "sha256":
-                        {
-                            for (int i = 1; i < args.Count(); i++)
-                                hashcmd(args[i], "sha256");
-                            break;
-                        }
                     case "sha384":
-                        {
-                            for (int i = 1; i < args.Count(); i++)
-                                hashcmd(args[i], "sha384");
-                            break;
-                        }
                     case "sha512":
                         {
-                            for (int i = 1; i < args.Count(); i++)
-                                hashcmd(args[i], "sha512");
+                            if (args.Count() < 1)
+                            {
+                                for (int i = 1; i < args.Count(); i++)
+                                    hashcmd(args[i], args[0]);
+                            }
+                            else
+                            {
+                                hashcmd(args[0]);
+                            }
                             break;
                         }
                     case "encrypt":
@@ -552,6 +542,20 @@ namespace ZefieCmd
                             }
                             break;
                         }
+                    case "drivelabel":
+                        {
+                            if (args.Count() == 2)
+                            {
+                                try { wl(Zefie.Path.getDriveLetterFromLabel(arg1)); }
+                                catch (Exception e) { wl("ERROR: " + e.Message); }
+                            }
+                            else
+                            {
+                                we("Usage: " + getExecFilename() + " "+args[0]+" (drive label)");
+                                exit(1);
+                            }
+                            break;
+                        }
                     default:
                         {
                             if (!nohelp)
@@ -601,8 +605,16 @@ namespace ZefieCmd
                     return;
                 }
             }
+            w(hash);
+            if (quiet)
+                w("\n");
             else
-            {
+                w("\t" + file + "\n");
+        }
+        private static void hashcmd(string hashtype)
+        {
+            string hash = null;
+            string file = "-";
                 byte[] data = Zefie.Data.readFromStdin();
                 switch (hashtype)
                 {
@@ -622,9 +634,7 @@ namespace ZefieCmd
                         hash = Zefie.Data.Hashing.SHA512(data);
                         break;
                 }
-                file = "-";
                 data = null;
-            }
             w(hash);
             if (quiet)
                 w("\n");

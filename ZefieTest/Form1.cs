@@ -87,23 +87,23 @@ namespace ZefieTest
 
         private void button14_Click(object sender, EventArgs e)
         {
-            textBox3.Text = Zefie.Crypto.genCryptoNumber().ToString();
+            textBox3.Text = Zefie.Cryptography.genCryptoNumber().ToString();
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
-            textBox3.Text = Zefie.Crypto.genCryptoString(20);
+            textBox3.Text = Zefie.Cryptography.genCryptoString(20);
         }
 
         private void button16_Click(object sender, EventArgs e)
         {
             char[] append = { '$', '%', '@', '!', '&', '(', ')', '[', ']', '|', '.', '?', '<', '>' };
-            textBox3.Text = Zefie.Crypto.genCryptoString(20, append);
+            textBox3.Text = Zefie.Cryptography.genCryptoString(20, append);
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
-            textBox3.Text = Zefie.Crypto.genCryptoNumber(1, 1000).ToString();
+            textBox3.Text = Zefie.Cryptography.genCryptoNumber(1, 1000).ToString();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -121,7 +121,7 @@ namespace ZefieTest
 
         private void button18_Click(object sender, EventArgs e)
         {
-            textBox3.Text = Zefie.Crypto.genHash(Convert.ToInt32(comboBox1.Text.Replace("-bit", "")));
+            textBox3.Text = Zefie.Cryptography.genHash(Convert.ToInt32(comboBox1.Text.Replace("-bit", "")));
         }
 
         private void button19_Click(object sender, EventArgs e)

@@ -67,7 +67,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Zefie.cs" />
+    <Compile Include="Bemani.cs" />
+    <Compile Include="Cryptography.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="Imaging.cs" />
+    <Compile Include="Math.cs" />
+    <Compile Include="Networking.cs" />
+    <Compile Include="Path.cs" />
+    <Compile Include="Prompts.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="TreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

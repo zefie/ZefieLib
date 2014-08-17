@@ -5,10 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Drawing;
 using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ZefieCmd
 {
@@ -608,15 +605,15 @@ namespace ZefieCmd
             switch (hashtype)
             {
                 case "md5":
-                    return Zefie.Data.Hashing.MD5(data);
+                    return Zefie.Cryptography.Hash.MD5(data);
                 case "sha1":
-                    return Zefie.Data.Hashing.SHA1(data);
+                    return Zefie.Cryptography.Hash.SHA1(data);
                 case "sha256":
-                    return Zefie.Data.Hashing.SHA256(data);
+                    return Zefie.Cryptography.Hash.SHA256(data);
                 case "sha384":
-                    return Zefie.Data.Hashing.SHA384(data);
+                    return Zefie.Cryptography.Hash.SHA384(data);
                 case "sha512":
-                    return Zefie.Data.Hashing.SHA512(data);
+                    return Zefie.Cryptography.Hash.SHA512(data);
             }
             return null;
         }
@@ -625,15 +622,15 @@ namespace ZefieCmd
             switch (hashtype)
             {
                 case "md5":
-                    return Zefie.Data.Hashing.MD5File(file);
+                    return Zefie.Cryptography.Hash.MD5(file);
                 case "sha1":
-                    return Zefie.Data.Hashing.SHA1File(file);
+                    return Zefie.Cryptography.Hash.SHA1(file);
                 case "sha256":
-                    return Zefie.Data.Hashing.SHA256File(file);
+                    return Zefie.Cryptography.Hash.SHA256(file);
                 case "sha384":
-                    return Zefie.Data.Hashing.SHA384File(file);
+                    return Zefie.Cryptography.Hash.SHA384(file);
                 case "sha512":
-                    return Zefie.Data.Hashing.SHA512File(file);
+                    return Zefie.Cryptography.Hash.SHA512(file);
             }
             return null;
         }
@@ -653,25 +650,25 @@ namespace ZefieCmd
                             f.Close();
                         }
                         if (rawdata)
-                            w(Zefie.Crypto.encrypt(buffer, passwd));
+                            w(Zefie.Cryptography.encrypt(buffer, passwd));
                         else
-                            wl(Zefie.Data.base64Encode(Zefie.Crypto.encrypt(buffer, passwd)));
+                            wl(Zefie.Data.base64Encode(Zefie.Cryptography.encrypt(buffer, passwd)));
                     }
                     else
                     {
                         buffer = Encoding.UTF8.GetBytes(data);
                         if (rawdata)
-                            w(Zefie.Crypto.encrypt(buffer, passwd));
+                            w(Zefie.Cryptography.encrypt(buffer, passwd));
                         else
-                            wl(Zefie.Data.base64Encode(Zefie.Crypto.encrypt(buffer, passwd)));
+                            wl(Zefie.Data.base64Encode(Zefie.Cryptography.encrypt(buffer, passwd)));
                     }
                 }
                 else
                 {
                     if (rawdata)
-                        w(Zefie.Crypto.encrypt(Zefie.Data.readFromStdin(), passwd));
+                        w(Zefie.Cryptography.encrypt(Zefie.Data.readFromStdin(), passwd));
                     else
-                        wl(Zefie.Data.base64Encode(Zefie.Crypto.encrypt(Zefie.Data.readFromStdin(), passwd)));
+                        wl(Zefie.Data.base64Encode(Zefie.Cryptography.encrypt(Zefie.Data.readFromStdin(), passwd)));
                 }
             }
         }
@@ -691,25 +688,25 @@ namespace ZefieCmd
                             f.Close();
                         }
                         if (rawdata)
-                            w(Zefie.Crypto.decrypt(buffer, passwd));
+                            w(Zefie.Cryptography.decrypt(buffer, passwd));
                         else
-                            w(Zefie.Crypto.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(buffer)), passwd));
+                            w(Zefie.Cryptography.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(buffer)), passwd));
                     }
                     else
                     {
                         buffer = Encoding.UTF8.GetBytes(data);
                         if (rawdata)
-                            w(Zefie.Crypto.decrypt(buffer, passwd));
+                            w(Zefie.Cryptography.decrypt(buffer, passwd));
                         else
-                            w(Zefie.Crypto.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(buffer)), passwd));
+                            w(Zefie.Cryptography.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(buffer)), passwd));
                     }
                 }
                 else
                 {
                     if (rawdata)
-                        w(Zefie.Crypto.decrypt(Zefie.Data.readFromStdin(), passwd));
+                        w(Zefie.Cryptography.decrypt(Zefie.Data.readFromStdin(), passwd));
                     else
-                        w(Zefie.Crypto.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(Zefie.Data.readFromStdin())), passwd));
+                        w(Zefie.Cryptography.decrypt(Zefie.Data.base64Decode(Encoding.UTF8.GetString(Zefie.Data.readFromStdin())), passwd));
                 }
             }
         }

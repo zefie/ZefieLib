@@ -70,6 +70,7 @@
     <Compile Include="Bemani.cs" />
     <Compile Include="Cryptography.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="Directory.cs" />
     <Compile Include="Imaging.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Networking.cs" />

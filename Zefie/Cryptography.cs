@@ -438,7 +438,7 @@ namespace Zefie
         public static void encryptToFile(string filename, byte[] toEncrypt, byte[] cryptKey, byte[] authKey, byte[] nonSecretPayload = null)
         {
             byte[] data = encrypt(toEncrypt, cryptKey, authKey, nonSecretPayload);
-            FileStream f = File.OpenWrite(filename);
+            FileStream f = System.IO.File.OpenWrite(filename);
             f.Write(data, 0, data.Length);
             f.Close();
         }
@@ -452,7 +452,7 @@ namespace Zefie
         public static void encryptToFile(string filename, byte[] toEncrypt, string password, byte[] nonSecretPayload = null)
         {
             byte[] data = encrypt(toEncrypt, password, nonSecretPayload);
-            FileStream f = File.OpenWrite(filename);
+            FileStream f = System.IO.File.OpenWrite(filename);
             f.Write(data, 0, data.Length);
             f.Close();
         }
@@ -466,7 +466,7 @@ namespace Zefie
         public static void encryptToFile(string filename, string toEncrypt, string password, byte[] nonSecretPayload = null)
         {
             byte[] data = Convert.FromBase64String(encrypt(toEncrypt, password, nonSecretPayload));
-            FileStream f = File.OpenWrite(filename);
+            FileStream f = System.IO.File.OpenWrite(filename);
             f.Write(data, 0, data.Length);
             f.Close();
         }
@@ -492,7 +492,7 @@ namespace Zefie
         /// <returns>Decrypted data</returns>
         public static byte[] decryptFromFile(string filename, byte[] cryptKey, byte[] authKey, int nonSecretPayloadLength = 0)
         {
-            FileStream f = File.OpenRead(filename);
+            FileStream f = System.IO.File.OpenRead(filename);
             byte[] data = new byte[f.Length];
             f.Read(data, 0, (int)f.Length);
             f.Close();
@@ -509,7 +509,7 @@ namespace Zefie
         /// <returns>Decrypted data</returns>
         public static byte[] decryptFromFile(string filename, string password, int nonSecretPayloadLength = 0)
         {
-            FileStream f = File.OpenRead(filename);
+            FileStream f = System.IO.File.OpenRead(filename);
             byte[] data = new byte[f.Length];
             f.Read(data, 0, (int)f.Length);
             f.Close();
@@ -534,7 +534,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA512 hash string</returns>
             public static string SHA512(string s)
             {
-                if (File.Exists(s))
+                if (System.IO.Directory.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -580,7 +580,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA384 hash string</returns>
             public static string SHA384(string s)
             {
-                if (File.Exists(s))
+                if (System.IO.Directory.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -626,7 +626,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA256 hash string</returns>
             public static string SHA256(string s)
             {
-                if (File.Exists(s))
+                if (System.IO.File.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -672,7 +672,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA1 hash string</returns>
             public static string SHA1(string s)
             {
-                if (File.Exists(s))
+                if (System.IO.Directory.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -718,7 +718,7 @@ namespace Zefie
             /// <returns>Hexadecimal MD5 hash string</returns>
             public static string MD5(string s)
             {
-                if (File.Exists(s))
+                if (System.IO.Directory.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];

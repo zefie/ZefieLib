@@ -38,10 +38,13 @@ namespace Zefie
         }
 
         /// <summary>
-        /// An extension of System.IO.Directory.GetFiles, this offers a natural sorting algorithm, and define an array of supported extensions.
+        /// An extension of System.IO.Directory.GetFiles, this offers a natural sorting algorithm, RegEx searching, and defing an array of supported extensions.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">Directory to scan for files</param>
+        /// <param name="search_string">RegExp search string</param>
+        /// <param name="sort">Use natural sorting</param>
+        /// <param name="recursive">Recursively scan directories</param>
+        /// <returns>Array of files that match the search pattern (if any), and Zefie.Directory.supportedExtensions</returns>
         public static IEnumerable<FileInfo> GetFiles(string path, string search_string = null, bool sort = true, bool recursive = false)
         {
             if (!System.IO.Directory.Exists(path))

@@ -534,7 +534,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA512 hash string</returns>
             public static string SHA512(string s)
             {
-                if (System.IO.Directory.Exists(s))
+                if (System.IO.File.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -580,7 +580,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA384 hash string</returns>
             public static string SHA384(string s)
             {
-                if (System.IO.Directory.Exists(s))
+                if (System.IO.File.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -672,7 +672,7 @@ namespace Zefie
             /// <returns>Hexadecimal SHA1 hash string</returns>
             public static string SHA1(string s)
             {
-                if (System.IO.Directory.Exists(s))
+                if (System.IO.File.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];
@@ -718,7 +718,7 @@ namespace Zefie
             /// <returns>Hexadecimal MD5 hash string</returns>
             public static string MD5(string s)
             {
-                if (System.IO.Directory.Exists(s))
+                if (System.IO.File.Exists(s))
                 {
                     int offset = 0;
                     byte[] block = new byte[Zefie.Data.BlockSize];

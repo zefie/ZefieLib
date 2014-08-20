@@ -85,6 +85,14 @@ namespace Zefie
 
             return fs;
         }
+        /// <summary>
+        /// An extension of System.IO.Directory.GetDirectories, this offers a natural sorting algorithm, and RegEx searching.
+        /// </summary>
+        /// <param name="path">Directory to scan for subdirectories</param>
+        /// <param name="search_string">RegExp search string</param>
+        /// <param name="sort">Use natural sorting</param>
+        /// <param name="recursive">Recursively scan directories</param>
+        /// <returns>Array of directories that match the search pattern (if any)</returns>
         public static string[] GetDirectories(string path, string search_string = null, bool sort = true, bool recursive = false)
         {
             if (!System.IO.Directory.Exists(path))
@@ -109,22 +117,23 @@ namespace Zefie
                 if (search_string != null)
                 {
                     Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(isSupported).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
                 }
                 else
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(isSupported).OrderByAlphaNumeric().ToArray();
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).OrderByAlphaNumeric().ToArray();
             }
             else
                 if (search_string != null)
                 {
                     Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(isSupported).Where(a => r.Match(a).Success).ToArray();
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).ToArray();
                 }
                 else
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(isSupported).ToArray();
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).ToArray();
 
             return ds;
         }
+
         internal static IEnumerable<string> OrderByAlphaNumeric(this IEnumerable<string> source)
         {
             return OrderByAlphaNumeric(source, t => t);

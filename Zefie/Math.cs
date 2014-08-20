@@ -52,16 +52,16 @@ namespace Zefie
         /// </summary>
         /// <param name="value">File size in bytes</param>
         /// <returns>User-friendly interpretation of the file size</returns>
-        public static string calcBytes(Int64 value)
+        public static string calcBytes(Int64 value, int decimals = 2)
         {
-            string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+            string[] SizeSuffixes = { "b", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
             if (value < 0) { return "-" + calcBytes(-value); }
-            if (value == 0) { return "0.0 bytes"; }
+            if (value == 0) { return "0 b"; }
 
             int mag = (int)System.Math.Log(value, 1024);
-            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
-
-            return string.Format("{0:n1} {1}", adjustedSize, SizeSuffixes[mag]);
+            decimal adjustedSize = System.Math.Round((decimal)value / (1L << (mag * 10)), decimals);
+            
+            return string.Format("{0:n1}{1}", adjustedSize, SizeSuffixes[mag]);
         }
     }
 }

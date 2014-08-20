@@ -166,7 +166,7 @@ namespace ZefieCmd
                 List<string> opt = new List<string>();
                 foreach (string arg in args)
                 {
-                    if (arg.Substring(0, 1) == "-")
+                    if (arg.Substring(0, 1) == "-") 
                         opt.Add(arg);
                     else
                         mew.Add(arg);
@@ -175,11 +175,19 @@ namespace ZefieCmd
 
                 foreach (string o in opt)
                 {
-                    if (o == "-q" || o == "--quiet")
-                        quiet = true;
+                    if (o == "-n" || o == "--no-sort")
+                        DirFlags.sort = false;
+                    if (o == "-r" || o == "--recursive")
+                        DirFlags.recursive = true;
+                    if (o == "-s" || o == "--system")
+                        DirFlags.system = true;
+                    if (o == "-h" || o == "--hidden")
+                        DirFlags.hidden = true;
                     if (o == "-r" || o == "--raw")
                         rawdata = true;
-                    if (o == "-h" || o == "--help")
+                    if (o == "-q" || o == "--quiet")
+                        quiet = true;
+                    if (o == "-?" || o == "--help")
                         showHelp();
 
                 }
@@ -202,6 +210,66 @@ namespace ZefieCmd
                             else
                             {
                                 hashcmd(args[0]);
+                            }
+                            break;
+                        }
+                    case "dir":
+                        {
+                            string path = null;
+                            string search = null;
+                            string fname = null;
+                            if (args.Count() > 2)
+                                search = args[2];
+
+                            if (Directory.Exists(arg1))
+                                path = arg1;
+                            else
+                            {
+                                path = Directory.GetCurrentDirectory();
+                                if (arg1 != null)
+                                    search = arg1;
+                            }
+                            try
+                            {
+                                string[] dirs = Zefie.Directory.GetDirectories(path, search, DirFlags.sort, DirFlags.recursive);
+                                string[] files = Zefie.Directory.GetFiles(path, search, DirFlags.sort, DirFlags.recursive);
+
+                                foreach (string dir in dirs)
+                                {
+                                    DirectoryInfo d = new DirectoryInfo(dir);
+                                    if (d.Attributes.ToString().Contains("Hidden") && !DirFlags.hidden)
+                                        continue;
+                                    if (d.Attributes.ToString().Contains("System") && !DirFlags.system)
+                                        continue;
+
+                                    if (DirFlags.recursive)
+                                        fname = d.FullName;
+                                    else
+                                        fname = d.Name;
+
+                                    wl(d.CreationTime.ToString("MM/dd/yy  hh:mm tt") + "\t<DIR>\t\t" + fname);
+                                }
+
+                                foreach (string file in files)
+                                {
+                                    FileInfo f = new FileInfo(file);
+                                    if (f.Attributes.ToString().Contains("Hidden") && !DirFlags.hidden)
+                                        continue;
+                                    if (f.Attributes.ToString().Contains("System") && !DirFlags.system)
+                                        continue;
+
+                                    if (DirFlags.recursive)
+                                        fname = f.FullName;
+                                    else
+                                        fname = f.Name;
+
+                                    wl(f.CreationTime.ToString("MM/dd/yy  hh:mm tt") + "\t\t" + Zefie.Math.calcBytes(f.Length) + "\t" + fname);
+
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                wl("ERROR: " + e.Message);
                             }
                             break;
                         }
@@ -710,5 +778,12 @@ namespace ZefieCmd
                 }
             }
         }
+    }
+    class DirFlags
+    {
+        public static bool recursive = false;
+        public static bool sort = true;
+        public static bool hidden = false;
+        public static bool system = false;
     }
 }

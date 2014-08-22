@@ -131,8 +131,8 @@ namespace ZefieTest
 
         private void button20_Click(object sender, EventArgs e)
         {
-            Zefie.Data.rawISO9660Mode = true;
-            string[] test = Zefie.Data.listISO9660Files("D:\\PERSONA2.BIN");
+            Zefie.Data.rawISO9660Mode = false;
+            string[] test = Zefie.Data.listISO9660Files("D:\\ubuntu-12.04-desktop-i386.iso");
             foreach (string s in test)
                 Zefie.Prompts.ShowMsg(s);
         }

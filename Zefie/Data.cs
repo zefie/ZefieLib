@@ -183,8 +183,11 @@ namespace Zefie
             {
                 FileStream raf = System.IO.File.OpenRead(file);
                 byte[] data = new byte[sectordata[1]];
-                raf.Position = _isosector * sectordata[0] + 24;
+                raf.Position = _isosector * sectordata[0];
+                if (rawISO9660Mode)
+                    raf.Position += 24;
                 raf.Read(data, 0, data.Length);
+                raf.Close();
                 int count = 0;
                 for (int index = 0; index < data.Length; index++)
                 {
@@ -212,9 +215,7 @@ namespace Zefie
             String flags = test.PadLeft(8).Replace(' ', '0');
             bool dir = false;
             if (flags.Substring(6, 1) == "1")
-            {
                 dir = true;
-            }
             int length = UValue(data[32]);
             for (int i = 33; i < 33 + length; i++)
             {
@@ -245,20 +246,36 @@ namespace Zefie
                 FileStream raf = System.IO.File.OpenRead(file);
                 raf.Position = (_isosector * nSector);
                 byte[] sector = new byte[_isosector];
+                int[] sd;
+                if (rawISO9660Mode)
+                    sd = new int[2] { 24, 30 };
+                else
+                    sd = new int[2] { 0, 6 };
+
                 while (raf.Read(sector, 0, _isosector) > 0)
                 {
-                    if ((isHeader(copyOfRange(sector, 24, 30)))
-                    && (isPrimaryVolumeDescriptor(sector[24])))
+                    if ((isHeader(copyOfRange(sector, sd[0], sd[1])))
+                        && (isPrimaryVolumeDescriptor(sector[sd[0]])))
                     {
                         break;
                     }
                 }
-                byte[] usefulData = copyOfRange(sector, 24, 2072);
-                sector = null;
-                GC.Collect();
-                seekFiles(file,getStartAndSize(file, usefulData));
+                raf.Close();
+                if (rawISO9660Mode)
+                {
+                    byte[] usefulData = copyOfRange(sector, 24, 2072);
+                    sector = null;
+                    GC.Collect();
+                    seekFiles(file, getStartAndSize(file, usefulData));
+                }
+                else
+                {
+                    GC.Collect();
+                    seekFiles(file, getStartAndSize(file, sector));
+
+                }
             }
-            catch {}
+            catch { }
         }
 
 

@@ -6,8 +6,7 @@ using System.Text;
 namespace Zefie
 {
     public class Cryptography
-    {
-
+    {       
         //Preconfigured Encryption Parameters
         public static readonly int BlockBitSize = 128;
         public static readonly int KeyBitSize = 256;

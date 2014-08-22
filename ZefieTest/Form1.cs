@@ -128,5 +128,13 @@ namespace ZefieTest
         {
             pictureBox1.Image = Zefie.Imaging.invertColors(pictureBox1.Image);
         }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            Zefie.Data.rawISO9660Mode = true;
+            string[] test = Zefie.Data.listISO9660Files("D:\\PERSONA2.BIN");
+            foreach (string s in test)
+                Zefie.Prompts.ShowMsg(s);
+        }
     }
 }

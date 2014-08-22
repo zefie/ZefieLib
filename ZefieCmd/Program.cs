@@ -213,6 +213,18 @@ namespace ZefieCmd
                             }
                             break;
                         }
+
+                    case "iso":
+                        {
+                            if (File.Exists(arg1))
+                            {
+                                Zefie.Data.rawISO9660Mode = rawdata;
+                                string[] files = Zefie.Data.listISO9660Files(arg1);
+                                foreach (string f in files)
+                                    wl(f);
+                            }
+                            break;
+                        }
                     case "dir":
                         {
                             string path = null;

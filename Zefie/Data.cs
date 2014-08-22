@@ -228,9 +228,9 @@ namespace Zefie
             int sz = readLittleEndianWord(copyOfRange(data, 10, 14));
             if (_isofiles == null)
                 _isofiles = new List<string>();
-            _isofiles.Add(path + nm);
+            _isofiles.Add("/"+(path + nm).TrimStart('/'));
             if (dir)
-                seekFiles(file, new int[] { ss, sz }, "/" + nm + "/");
+                seekFiles(file, new int[] { ss, sz }, "/" + path + nm + "/");
 
         }
         

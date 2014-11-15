@@ -479,7 +479,7 @@ namespace Zefie
         /// <param name="nonSecretPayloadLength">Salt payload</param>
         public static void encryptToFile(string filename, string toEncrypt, byte[] cryptKey, byte[] authKey, byte[] nonSecretPayload = null)
         {
-            encryptToFile(filename, Encoding.UTF8.GetBytes(toEncrypt), cryptKey, authKey);
+            encryptToFile(filename, Encoding.UTF8.GetBytes(toEncrypt), cryptKey, authKey, nonSecretPayload);
         }
         /// <summary>
         /// Decrypts data from an AES encrypted file

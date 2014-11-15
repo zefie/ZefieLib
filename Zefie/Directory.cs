@@ -16,6 +16,50 @@ namespace Zefie
         public static List<string> supportedExtensions = new List<string>();
 
         /// <summary>
+        /// Copies a directory's contents (and optionally its tree) to another directory
+        /// </summary>
+        /// <param name="sourceDirName">Source Directory</param>
+        /// <param name="destDirName">Destionation Directory</param>
+        /// <param name="copySubDirs">Recursive</param>
+        public static void Copy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            // If the destination directory doesn't exist, create it. 
+            if (!System.IO.Directory.Exists(destDirName))
+            {
+                System.IO.Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = System.IO.Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location. 
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = System.IO.Path.Combine(destDirName, subdir.Name);
+                    Directory.Copy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks whether or not the filename matches extensions defined in supportedExtensions
         /// </summary>
         /// <param name="file">Filename to check against supportedExtensions</param>

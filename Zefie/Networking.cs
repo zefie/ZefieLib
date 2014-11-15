@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 using System.Net.NetworkInformation;
 
 namespace Zefie
@@ -15,19 +16,17 @@ namespace Zefie
         {
             // 127.0.0.1
             if (address == null)
-                address = new IPAddress(16777343);
+                address = Dns.GetHostEntry("localhost").AddressList[0];
 
-            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-
-            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
+            try
             {
-                if (tcpi.LocalEndPoint.Address == address && tcpi.LocalEndPoint.Port == port)
-                {
-                    return false;
-                }
+                TcpListener tcpListener = new TcpListener(address, port);
+                tcpListener.Start();
+                tcpListener.Stop();
+                return true;
             }
-            return true;
+            catch { }
+            return false;
         }
     }
 }

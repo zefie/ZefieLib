@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Zefie
+namespace ZefieLib
 {
     public class Imaging
     {
@@ -11,7 +11,7 @@ namespace Zefie
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns>Inverted Bitmap</returns>
-        public static Bitmap invertColors(Bitmap bitmap)
+        public static Bitmap InvertColors(Bitmap bitmap)
         {
             var bitmapRead = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
             var bitmapLength = bitmapRead.Stride * bitmapRead.Height;
@@ -27,7 +27,6 @@ namespace Zefie
                 //        [i + 3] = ALPHA.
             }
             Bitmap outBMP = new Bitmap(bitmap);
-            bitmap = null;
             var bitmapWrite = outBMP.LockBits(new Rectangle(0, 0, outBMP.Width, outBMP.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
             Marshal.Copy(bitmapBGRA, 0, bitmapWrite.Scan0, bitmapLength);
             outBMP.UnlockBits(bitmapWrite);
@@ -38,10 +37,10 @@ namespace Zefie
         /// </summary>
         /// <param name="image"></param>
         /// <returns>Inverted Bitmap</returns>
-        public static Image invertColors(Image image)
+        public static Image InvertColors(Image image)
         {
             Bitmap bitmap = new Bitmap(image);
-            bitmap = invertColors(bitmap);
+            bitmap = InvertColors(bitmap);
             return (Image)bitmap;
         }
         /// <summary>
@@ -80,8 +79,8 @@ namespace Zefie
         /// <returns>Scaled image</returns>
         public static Image Scale(Image image, double percent)
         {
-            int width = (int)Math.calcPercentOf((double)image.Width, percent);
-            int height = (int)Math.calcPercentOf((double)image.Height, percent);
+            int width = (int)Math.CalcPercentOf((double)image.Width, percent);
+            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
             return Scale(image, width, height);
         }
         /// <summary>
@@ -92,8 +91,8 @@ namespace Zefie
         /// <returns>Scaled image</returns>
         public static Image Scale(Image image, int width)
         {
-            double percent = Math.calcPercent(width, image.Width);
-            int height = (int)Math.calcPercentOf((double)image.Height, percent);
+            double percent = Math.CalcPercent(width, image.Width);
+            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
             return Scale(image, width, height);
         }
         /// <summary>
@@ -117,8 +116,8 @@ namespace Zefie
         public static Bitmap Scale(Bitmap bitmap, double percent)
         {
             Image image = (Image)bitmap;
-            int width = (int)Math.calcPercentOf((double)image.Width, percent);
-            int height = (int)Math.calcPercentOf((double)image.Height, percent);
+            int width = (int)Math.CalcPercentOf((double)image.Width, percent);
+            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
             return new Bitmap(Scale(image, width, height));
         }
         /// <summary>
@@ -130,8 +129,8 @@ namespace Zefie
         public static Bitmap Scale(Bitmap bitmap, int width)
         {
             Image image = (Image)bitmap;
-            double percent = Math.calcPercent(width, image.Width);
-            int height = (int)Math.calcPercentOf((double)image.Height, percent);
+            double percent = Math.CalcPercent(width, image.Width);
+            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
             return new Bitmap(Scale(image, width, height));
         }
     }

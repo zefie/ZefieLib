@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zefie
+namespace ZefieLib
 {
     public class Math
     {
@@ -10,7 +10,7 @@ namespace Zefie
         /// <param name="value"></param>
         /// <param name="max"></param>
         /// <returns>Percentage</returns>
-        public static double calcPercent(double value, double max)
+        public static double CalcPercent(double value, double max)
         {
             return ((value / max) * 100);
         }
@@ -20,7 +20,7 @@ namespace Zefie
         /// <param name="value"></param>
         /// <param name="percent"></param>
         /// <returns>The full value that (<paramref name="value"/>) is (<paramref name="percent"/>) percent of</returns>
-        public static double calcPercentOf(double value, double percent)
+        public static double CalcPercentOf(double value, double percent)
         {
             return ((value / 100) * percent);
         }
@@ -29,9 +29,9 @@ namespace Zefie
         /// </summary>
         /// <param name="max">Highest number to generate</param>
         /// <returns>A random number</returns>
-        public static int random(int max)
+        public static int Random(int max)
         {
-            Random rand = new Random(Cryptography.genCryptoNumber());
+            Random rand = new Random(Cryptography.GenerateCryptoNumber());
             return rand.Next(max);
         }
         /// <summary>
@@ -40,7 +40,7 @@ namespace Zefie
         /// <param name="min">Lowest number to generate</param>
         /// <param name="max">Highest number to generate</param>
         /// <returns>A random number</returns>
-        public static int random(int min, int max)
+        public static int Random(int min, int max)
         {
             if (min > max) throw new ArgumentOutOfRangeException("min should not be greater than max");
             if (min == max) return min;
@@ -52,10 +52,10 @@ namespace Zefie
         /// </summary>
         /// <param name="value">File size in bytes</param>
         /// <returns>User-friendly interpretation of the file size</returns>
-        public static string calcBytes(Int64 value, int decimals = 2)
+        public static string CalcBytes(Int64 value, int decimals = 2)
         {
             string[] SizeSuffixes = { "b", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-            if (value < 0) { return "-" + calcBytes(-value); }
+            if (value < 0) { return "-" + CalcBytes(-value); }
             if (value == 0) { return "0 b"; }
 
             int mag = (int)System.Math.Log(value, 1024);

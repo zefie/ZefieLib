@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 
-namespace Zefie
+namespace ZefieLib
 {
     public class Path
     {
@@ -9,7 +10,7 @@ namespace Zefie
         /// </summary>
         /// <param name="label">Label of the drive to search for (case sensitive)</param>
         /// <returns>Drive letter in format of X:\, or null if no results</returns>
-        public static string getDriveLetterFromLabel(string label)
+        public static string GetDriveLetterFromLabel(string label)
         {
             foreach (DriveInfo DI in DriveInfo.GetDrives())
             {
@@ -26,6 +27,15 @@ namespace Zefie
                 catch { }
             }
             return null;
+        }
+
+        [DllImport("kernel32.dll")]
+        public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+
+        public enum SymbolicLink
+        {
+            File = 0,
+            Directory = 1
         }
     }
 }

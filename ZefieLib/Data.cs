@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Zefie
+namespace ZefieLib
 {
     public class Data
     {
@@ -15,7 +15,7 @@ namespace Zefie
         /// <summary>
         /// If true, reads 2352 bytes per sector, otherwise 2048 bytes per sector.
         /// </summary>
-        public static bool rawISO9660Mode
+        public static bool RawISO9660Mode
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Zefie
         /// </summary>
         /// <param name="bytes">Data</param>
         /// <returns>A hexidecimal string</returns>
-        public static string byteToHex(byte[] bytes)
+        public static string ByteToHex(byte[] bytes)
         {
             StringBuilder hex = new StringBuilder(bytes.Length * 2);
             foreach (byte b in bytes)
@@ -50,7 +50,7 @@ namespace Zefie
         /// </summary>
         /// <param name="hex">Hexadecimal string</param>
         /// <returns>Binary data</returns>
-        public static byte[] hexToBytes(string hex)
+        public static byte[] HexToBytes(string hex)
         {
             int NumberChars = hex.Length / 2;
             byte[] bytes = new byte[NumberChars];
@@ -67,7 +67,7 @@ namespace Zefie
         /// </summary>
         /// <param name="data">Binary data to encode</param>
         /// <returns>A base64 encoded string</returns>
-        public static string base64Encode(byte[] data)
+        public static string Base64Encode(byte[] data)
         {
             return Convert.ToBase64String(data);
         }
@@ -76,7 +76,7 @@ namespace Zefie
         /// </summary>
         /// <param name="text">String to encode</param>
         /// <returns>A base64 encoded string</returns>
-        public static string base64Encode(string text)
+        public static string Base64Encode(string text)
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
         }
@@ -85,7 +85,7 @@ namespace Zefie
         /// </summary>
         /// <param name="text">Base64 encoded data</param>
         /// <returns>Binary data</returns>
-        public static byte[] base64Decode(string text)
+        public static byte[] Base64Decode(string text)
         {
             return Convert.FromBase64String(text);
         }
@@ -93,7 +93,7 @@ namespace Zefie
         /// Reads data from STDIN
         /// </summary>
         /// <returns>Data captured from STDIN</returns>
-        public static byte[] readFromStdin()
+        public static byte[] ReadFromStdin()
         {
             using (Stream stdin = Console.OpenStandardInput())
             {
@@ -113,7 +113,7 @@ namespace Zefie
             }
         }
 
-        public static int readLittleEndianWord(byte[] bytes)
+        public static int ReadLittleEndianWord(byte[] bytes)
         {
             byte b1 = bytes[0];
             byte b2 = bytes[1];
@@ -131,7 +131,7 @@ namespace Zefie
         }
 
 
-        public static int toInt32BigEndian(byte[] buf, int i)
+        public static int ToInt32BigEndian(byte[] buf, int i)
         {
             return (buf[i] << 24) | (buf[i + 1] << 16) | (buf[i + 2] << 8) | buf[i + 3];
         }
@@ -141,7 +141,7 @@ namespace Zefie
             return (short)(b & 0xFF);
         }
 
-        public static bool checkPowerOfTwo(int number)
+        public static bool CheckPowerOfTwo(int number)
         {
             if (number <= 0)
             {
@@ -151,12 +151,12 @@ namespace Zefie
         }
 
 
-        internal static bool isHeader(byte[] header)
+        internal static bool IsHeader(byte[] header)
         {
             return (header[1] == 67) && (header[2] == 68) && (header[3] == 48)
             && (header[4] == 48) && (header[5] == 49);
         }
-        internal static byte[] copyOfRange(byte[] src, int start, int end)
+        internal static byte[] CopyOfRange(byte[] src, int start, int end)
         {
             int len = end - start;
             byte[] dest = new byte[len];
@@ -167,24 +167,24 @@ namespace Zefie
             }
             return dest;
         }
-        internal static bool isPrimaryVolumeDescriptor(byte b)
+        internal static bool IsPrimaryVolumeDescriptor(byte b)
         {
-            return 1 == Zefie.Data.UValue(b);
+            return 1 == UValue(b);
         }
-        internal static int[] getStartAndSize(string file, byte[] data)
+        internal static int[] GetStartAndSize(byte[] data)
         {
-            int startSector = readLittleEndianWord(copyOfRange(data, 158, 162));
-            int size = readLittleEndianWord(copyOfRange(data, 166, 170));
+            int startSector = ReadLittleEndianWord(CopyOfRange(data, 158, 162));
+            int size = ReadLittleEndianWord(CopyOfRange(data, 166, 170));
             return (new int[2] { startSector, size });
         }
-        internal static void seekFiles(string file, int[] sectordata, string path = "/")
+        internal static void SeekFiles(string file, int[] sectordata, string path = "/")
         {
             try
             {
                 FileStream raf = System.IO.File.OpenRead(file);
                 byte[] data = new byte[sectordata[1]];
                 raf.Position = _isosector * sectordata[0];
-                if (rawISO9660Mode)
+                if (RawISO9660Mode)
                     raf.Position += 24;
                 raf.Read(data, 0, data.Length);
                 raf.Close();
@@ -196,7 +196,7 @@ namespace Zefie
                         break;
                     if (count > 1)
                     {
-                        parseFile(copyOfRange(data, index, index + offset), file, path);
+                        ParseFile(CopyOfRange(data, index, index + offset), file, path);
                         index += offset - 1;
                     }
                     else
@@ -208,10 +208,10 @@ namespace Zefie
             }
             catch { }
         }
-        internal static void parseFile(byte[] data, string file, string path)
+        internal static void ParseFile(byte[] data, string file, string path)
         {
             StringBuilder sb = new StringBuilder();
-            string test = convertToBinaryString(UValue(data[25]));
+            string test = ConvertToBinaryString(UValue(data[25]));
             String flags = test.PadLeft(8).Replace(' ', '0');
             bool dir = false;
             if (flags.Substring(6, 1) == "1")
@@ -224,13 +224,13 @@ namespace Zefie
             if ((sb.ToString().Length == 1) && (sb.ToString().Substring(0, 1) == "0"))
                 return;
             String nm = dir ? sb.ToString() : sb.ToString().Substring(0, sb.ToString().Length - 2);
-            int ss = readLittleEndianWord(copyOfRange(data, 2, 6));
-            int sz = readLittleEndianWord(copyOfRange(data, 10, 14));
+            int ss = ReadLittleEndianWord(CopyOfRange(data, 2, 6));
+            int sz = ReadLittleEndianWord(CopyOfRange(data, 10, 14));
             if (_isofiles == null)
                 _isofiles = new List<string>();
             _isofiles.Add("/"+(path + nm).TrimStart('/'));
             if (dir)
-                seekFiles(file, new int[] { ss, sz }, "/" + path + nm + "/");
+                SeekFiles(file, new int[] { ss, sz }, "/" + path + nm + "/");
 
         }
         
@@ -239,7 +239,7 @@ namespace Zefie
         /// </summary>
         /// <param name="file">ISO file</param>
         /// <param name="nSector">Sector number</param>
-        public static void readISO9660Sector(string file, int nSector)
+        public static void ReadISO9660Sector(string file, int nSector)
         {
             try
             {
@@ -247,32 +247,31 @@ namespace Zefie
                 raf.Position = (_isosector * nSector);
                 byte[] sector = new byte[_isosector];
                 int[] sd;
-                if (rawISO9660Mode)
+                if (RawISO9660Mode)
                     sd = new int[2] { 24, 30 };
                 else
                     sd = new int[2] { 0, 6 };
 
                 while (raf.Read(sector, 0, _isosector) > 0)
                 {
-                    if ((isHeader(copyOfRange(sector, sd[0], sd[1])))
-                        && (isPrimaryVolumeDescriptor(sector[sd[0]])))
+                    if ((IsHeader(CopyOfRange(sector, sd[0], sd[1])))
+                        && (IsPrimaryVolumeDescriptor(sector[sd[0]])))
                     {
                         break;
                     }
                 }
                 raf.Close();
-                if (rawISO9660Mode)
+                if (RawISO9660Mode)
                 {
-                    byte[] usefulData = copyOfRange(sector, 24, 2072);
+                    byte[] usefulData = CopyOfRange(sector, 24, 2072);
                     sector = null;
                     GC.Collect();
-                    seekFiles(file, getStartAndSize(file, usefulData));
+                    SeekFiles(file, GetStartAndSize(usefulData));
                 }
                 else
                 {
                     GC.Collect();
-                    seekFiles(file, getStartAndSize(file, sector));
-
+                    SeekFiles(file, GetStartAndSize(sector));
                 }
             }
             catch { }
@@ -284,7 +283,7 @@ namespace Zefie
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static string convertToBinaryString(int x)
+        public static string ConvertToBinaryString(int x)
         {
             return Convert.ToString(x, 2).PadLeft(8, '0');
         }
@@ -294,10 +293,10 @@ namespace Zefie
         /// </summary>
         /// <param name="file">ISO file</param>
         /// <returns>Directory listing of ISO</returns>
-        public static string[] listISO9660Files(string file)
+        public static string[] ListISO9660Files(string file)
         {
             _isofiles.Clear();
-            readISO9660Sector(file,16);
+            ReadISO9660Sector(file,16);
             return _isofiles.ToArray();
         }
     }

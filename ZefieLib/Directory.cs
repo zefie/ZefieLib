@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 
-namespace Zefie
+namespace ZefieLib
 {
     public static class Directory
     {
@@ -64,7 +64,7 @@ namespace Zefie
         /// </summary>
         /// <param name="file">Filename to check against supportedExtensions</param>
         /// <returns>True if matches, false otherwise. If no supportedExtensions are defined, this will always return true.</returns>
-        public static bool isSupported(string file)
+        public static bool IsSupported(string file)
         {
             if (supportedExtensions.Count() > 0)
             {
@@ -98,7 +98,7 @@ namespace Zefie
             if (recursive)
             {
                 List<string> fsr = new List<string>();
-                foreach (string dir in Zefie.Directory.GetDirectories(path, null, true, true))
+                foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, true, true))
                 {
                     try { fsr.AddRange(GetFiles(dir, search_string, sort)); }
                     catch { };
@@ -112,20 +112,20 @@ namespace Zefie
             {
                 if (search_string != null)
                 {
-                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(isSupported).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
                 }
                 else
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(isSupported).OrderByAlphaNumeric().ToArray();
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).OrderByAlphaNumeric().ToArray();
             }
             else
                 if (search_string != null)
                 {
-                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(isSupported).Where(a => r.Match(a).Success).ToArray();
+                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).ToArray();
                 }
                 else
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(isSupported).ToArray();
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).ToArray();
 
             return fs;
         }
@@ -145,7 +145,7 @@ namespace Zefie
             if (recursive)
             {
                 List<string> dsr = new List<string>();
-                foreach (string dir in Zefie.Directory.GetDirectories(path, null, false, false))
+                foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, false, false))
                 {
                     dsr.Add(dir);
                     try { dsr.AddRange(GetDirectories(dir, search_string, sort, true)); }

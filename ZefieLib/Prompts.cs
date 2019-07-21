@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Zefie
+namespace ZefieLib
 {
     public class Prompts
     {
@@ -13,12 +13,14 @@ namespace Zefie
         /// <returns>User's choice in boolean value</returns>
         public static bool ShowConfirm(string text, string caption = "")
         {
-            Form prompt = new Form();
-            prompt.Text = caption;
-            prompt.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            prompt.MaximizeBox = false;
-            prompt.MinimizeBox = false;
-            prompt.ShowInTaskbar = false;
+            Form prompt = new Form
+            {
+                Text = caption,
+                FormBorderStyle = FormBorderStyle.FixedToolWindow,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ShowInTaskbar = false
+            };
             bool result = false;
             prompt.StartPosition = FormStartPosition.CenterScreen;
             Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new System.Drawing.Size(550, 1000), Text = text };
@@ -57,13 +59,15 @@ namespace Zefie
         /// <returns>The text the user entered</returns>
         public static string ShowPrompt(string text, string caption = "")
         {
-            Form prompt = new Form();
-            prompt.Text = caption;
-            prompt.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            prompt.MaximizeBox = false;
-            prompt.MinimizeBox = false;
-            prompt.ShowInTaskbar = false;
-            prompt.StartPosition = FormStartPosition.CenterScreen;
+            Form prompt = new Form
+            {
+                Text = caption,
+                FormBorderStyle = FormBorderStyle.FixedToolWindow,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ShowInTaskbar = false,
+                StartPosition = FormStartPosition.CenterScreen
+            };
             Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new System.Drawing.Size(550, 1000), Text = text };
             Size labelSize = new Size();
             using (Graphics g = textLabel.CreateGraphics())
@@ -119,7 +123,7 @@ namespace Zefie
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected file, or null</returns>
-        public static string browseOpenFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string BrowseOpenFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
         {
             OpenFileDialog f = new OpenFileDialog();
             if (start_folder != null)
@@ -138,7 +142,7 @@ namespace Zefie
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected files, or null</returns>
-        public static string[] browseOpenFiles(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string[] BrowseOpenFiles(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
         {
             OpenFileDialog f = new OpenFileDialog();
             if (start_folder != null)
@@ -157,7 +161,7 @@ namespace Zefie
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected file, or null</returns>
-        public static string browseSaveFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string BrowseSaveFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
         {
             SaveFileDialog f = new SaveFileDialog();
             if (start_folder != null)
@@ -174,7 +178,7 @@ namespace Zefie
         /// <param name="title">Title of the dialog</param>
         /// <param name="new_folder_button">Show the 'New Folder' button</param>
         /// <returns>User selected folder, or null</returns>
-        public static string browseFolder(string title = null, bool new_folder_button = true)
+        public static string BrowseFolder(string title = null, bool new_folder_button = true)
         {
             FolderBrowserDialog f = new FolderBrowserDialog();
             if (title != null)

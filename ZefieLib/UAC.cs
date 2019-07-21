@@ -52,13 +52,14 @@ namespace ZefieLib
                         Verb = "runas"
                     };
                     Process.Start(startInfo);
+                    return true;
                 }
                 catch
                 {
                     DialogResult errormsg = MessageBox.Show("There was an error gaining administrative privileges", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                     if (errormsg == DialogResult.Retry)
                     {
-                        RunAsAdministrator(executable, args);
+                        return RunAsAdministrator(executable, args);
                     }
                 }
                 return false;

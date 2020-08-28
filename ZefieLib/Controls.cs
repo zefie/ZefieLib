@@ -73,6 +73,18 @@ namespace ZefieLib
             }
         }
 
+        public static void SetLabelText(ToolStripStatusLabel l, string text)
+        {
+            if (l.GetCurrentParent().InvokeRequired)
+            {
+                l.GetCurrentParent().Invoke(new MethodInvoker(delegate { l.Text = text; }));
+            }
+            else
+            {
+                l.Text = text;
+            }
+        }
+
         public static void SetTextboxText(RichTextBox rtb, string text)
         {
             if (rtb.InvokeRequired)
@@ -284,6 +296,20 @@ namespace ZefieLib
             else
             {
                 value = t.SelectedIndex;
+            }
+            return value;
+        }
+
+        public static string GetComboBoxText(ComboBox t)
+        {
+            string value = "";
+            if (t.InvokeRequired)
+            {
+                t.Invoke(new MethodInvoker(delegate { value = t.Text; }));
+            }
+            else
+            {
+                value = t.Text;
             }
             return value;
         }

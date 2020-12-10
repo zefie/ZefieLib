@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ZefieLib
@@ -228,12 +227,12 @@ namespace ZefieLib
             int sz = ReadLittleEndianWord(CopyOfRange(data, 10, 14));
             if (_isofiles == null)
                 _isofiles = new List<string>();
-            _isofiles.Add("/"+(path + nm).TrimStart('/'));
+            _isofiles.Add("/" + (path + nm).TrimStart('/'));
             if (dir)
                 SeekFiles(file, new int[] { ss, sz }, "/" + path + nm + "/");
 
         }
-        
+
         /// <summary>
         /// Reads a sector from an ISO file
         /// </summary>
@@ -296,7 +295,7 @@ namespace ZefieLib
         public static string[] ListISO9660Files(string file)
         {
             _isofiles.Clear();
-            ReadISO9660Sector(file,16);
+            ReadISO9660Sector(file, 16);
             return _isofiles.ToArray();
         }
     }

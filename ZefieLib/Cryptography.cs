@@ -6,7 +6,7 @@ using System.Text;
 namespace ZefieLib
 {
     public class Cryptography
-    {       
+    {
         //Preconfigured Encryption Parameters
         public static readonly int BlockBitSize = 128;
         public static readonly int KeyBitSize = 256;
@@ -515,7 +515,7 @@ namespace ZefieLib
             return Decrypt(data, password, nonSecretPayloadLength);
         }
         public class Hash
-        {            
+        {
             /// <summary>
             /// Computes a SHA512 hash
             /// </summary>
@@ -740,7 +740,7 @@ namespace ZefieLib
                             md5.TransformFinalBlock(block, 0, block.Length);
                             hash = md5.Hash;
                         }
-                    } 
+                    }
                     return ZefieLib.Data.ByteToHex(hash);
                 }
                 else

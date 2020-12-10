@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Net.NetworkInformation;
 
 namespace ZefieLib
 {

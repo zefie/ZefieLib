@@ -60,7 +60,7 @@ namespace ZefieLib
 
             int mag = (int)System.Math.Log(value, 1024);
             decimal adjustedSize = System.Math.Round((decimal)value / (1L << (mag * 10)), decimals);
-            
+
             return string.Format("{0:n1}{1}", adjustedSize, SizeSuffixes[mag]);
         }
     }

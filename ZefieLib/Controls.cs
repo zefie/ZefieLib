@@ -1,7 +1,5 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ZefieLib
@@ -115,7 +113,7 @@ namespace ZefieLib
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { tb.Select(start,length); }));
+                tb.Invoke(new MethodInvoker(delegate { tb.Select(start, length); }));
             }
             else
             {
@@ -299,7 +297,6 @@ namespace ZefieLib
             }
             return value;
         }
-
         public static string GetComboBoxText(ComboBox t)
         {
             string value = "";
@@ -313,7 +310,6 @@ namespace ZefieLib
             }
             return value;
         }
-
         public static bool GetCheckBoxChecked(CheckBox t)
         {
             bool value = false;
@@ -444,9 +440,9 @@ namespace ZefieLib
 
                 public ColorProgressBar()
                 {
-                    if (!this.IsWinXP)
+                    if (!IsWinXP)
                     {
-                        this.SetStyle(ControlStyles.UserPaint, true);
+                        SetStyle(ControlStyles.UserPaint, true);
                         Colors = new Color[2]
                         {
                 BackColor,
@@ -457,7 +453,7 @@ namespace ZefieLib
 
                 protected override void OnPaintBackground(PaintEventArgs pevent)
                 {
-                    if (this.IsWinXP)
+                    if (IsWinXP)
                     {
                         base.OnPaintBackground(pevent);
                         return;
@@ -467,23 +463,23 @@ namespace ZefieLib
 
                 protected override void OnPaint(PaintEventArgs e)
                 {
-                    if (this.IsWinXP)
+                    if (IsWinXP)
                     {
                         base.OnPaint(e);
                         return;
                     }
 
-                    using (Image offscreenImage = new Bitmap(this.Width, this.Height))
+                    using (Image offscreenImage = new Bitmap(Width, Height))
                     {
                         using (Graphics offscreen = Graphics.FromImage(offscreenImage))
                         {
-                            Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
+                            Rectangle rect = new Rectangle(0, 0, Width, Height);
 
                             if (ProgressBarRenderer.IsSupported)
                                 ProgressBarRenderer.DrawHorizontalBar(offscreen, rect);
 
                             rect.Inflate(new Size(-inset, -inset)); // Deflate inner rect.
-                            rect.Width = (int)(rect.Width * ((double)this.Value / this.Maximum));
+                            rect.Width = (int)(rect.Width * ((double)Value / Maximum));
                             if (rect.Width == 0) rect.Width = 1; // Can't draw rec with width of 0.
 
                             LinearGradientBrush brush = new LinearGradientBrush(rect, Colors[0], Colors[1], GradientMode);

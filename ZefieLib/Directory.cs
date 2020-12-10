@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -94,7 +93,7 @@ namespace ZefieLib
             if (!System.IO.Directory.Exists(path))
                 return null;
 
-            
+
             if (recursive)
             {
                 List<string> fsr = new List<string>();
@@ -120,12 +119,12 @@ namespace ZefieLib
             }
             else
                 if (search_string != null)
-                {
-                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).ToArray();
-                }
-                else
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).ToArray();
+            {
+                Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
+                fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).ToArray();
+            }
+            else
+                fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).ToArray();
 
             return fs;
         }
@@ -168,12 +167,12 @@ namespace ZefieLib
             }
             else
                 if (search_string != null)
-                {
-                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).ToArray();
-                }
-                else
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).ToArray();
+            {
+                Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
+                ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).ToArray();
+            }
+            else
+                ds = System.IO.Directory.GetDirectories(path, "*", so).ToArray();
 
             return ds;
         }

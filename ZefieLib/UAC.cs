@@ -35,7 +35,7 @@ namespace ZefieLib
         /// </summary>
         /// <param name="executable">full path to executable</param>
         /// <param name="args">arguments to pass to executable</param>
-        /// <returns></returns>
+        /// <returns>true if successful, so you can properly know to terminate your non-admin copy</returns>
         public static bool RunAsAdministrator(string executable, string args)
         {
             if (IsAdmin == false)
@@ -47,7 +47,7 @@ namespace ZefieLib
                         Arguments = args,
                         Verb = "runas"
                     };
-                    Process.Start(startInfo);
+                    _ = Process.Start(startInfo);
                     return true;
                 }
                 catch

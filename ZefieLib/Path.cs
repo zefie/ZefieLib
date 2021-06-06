@@ -30,6 +30,14 @@ namespace ZefieLib
         }
 
         [DllImport("kernel32.dll")]
+
+        /// <summary>
+        /// Creates an NTFS Symlink (Junction)
+        /// </summary>
+        /// <param name="lpSymlinkFileName">Location for the new symlink</param>
+        /// <param name="lpTargetFileName">Location of the file to be linked to</param>
+        /// <param name="dwFlags">SymbolicLink Flags (File or Directory)</param>
+        /// <returns>True if successful, false if not</returns>
         public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
         public enum SymbolicLink

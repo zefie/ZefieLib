@@ -15,7 +15,9 @@ namespace ZefieLib
         {
             // 127.0.0.1
             if (address == null)
+            {
                 address = Dns.GetHostEntry("localhost").AddressList[0];
+            }
 
             try
             {

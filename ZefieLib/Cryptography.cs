@@ -36,10 +36,18 @@ namespace ZefieLib
         /// <param name="min">Minimum number to generate</param>
         /// <param name="max">Maximum number to generate</param>
         /// <returns>A random number between <paramref name="min"/> and <paramref name="max"/></returns>
-        public static int GenerateCryptoNumber(int min = 0, int max = Int32.MaxValue)
+        public static int GenerateCryptoNumber(int min = 0, int max = int.MaxValue)
         {
-            if (min > max) throw new ArgumentOutOfRangeException("min should not be greater than max");
-            if (min == max) return min;
+            if (min > max)
+            {
+                throw new ArgumentOutOfRangeException("min should not be greater than max");
+            }
+
+            if (min == max)
+            {
+                return min;
+            }
+
             long diff = (long)max - min;
 
             while (true)
@@ -82,7 +90,7 @@ namespace ZefieLib
         /// <returns>A random string of characters</returns>
         public static string GenerateCryptoString(int length, char[] append)
         {
-            return Cryptography.GenerateCryptoString(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + new String(append));
+            return Cryptography.GenerateCryptoString(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + new string(append));
         }
         /// <summary>
         /// Generates a hexadecimal string via RNGCryptoServiceProvider
@@ -113,10 +121,12 @@ namespace ZefieLib
         public static string Encrypt(string toEncrypt, byte[] cryptKey, byte[] authKey, byte[] nonSecretPayload = null)
         {
             if (string.IsNullOrEmpty(toEncrypt))
+            {
                 throw new ArgumentException("What are we encrypting?", "toEncrypt");
+            }
 
-            var plainText = Encoding.UTF8.GetBytes(toEncrypt);
-            var cipherText = Encrypt(plainText, cryptKey, authKey, nonSecretPayload);
+            byte[] plainText = Encoding.UTF8.GetBytes(toEncrypt);
+            byte[] cipherText = Encrypt(plainText, cryptKey, authKey, nonSecretPayload);
             return Convert.ToBase64String(cipherText);
         }
         /// <summary>
@@ -131,13 +141,19 @@ namespace ZefieLib
         {
             //User Error Checks
             if (cryptKey == null || cryptKey.Length != KeyBitSize / 8)
-                throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "cryptKey");
+            {
+                throw new ArgumentException(string.Format("Key needs to be {0} bit!", KeyBitSize), "cryptKey");
+            }
 
             if (authKey == null || authKey.Length != KeyBitSize / 8)
-                throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "authKey");
+            {
+                throw new ArgumentException(string.Format("Key needs to be {0} bit!", KeyBitSize), "authKey");
+            }
 
             if (toEncrypt == null || toEncrypt.Length < 1)
+            {
                 throw new ArgumentException("What are we encrypting?", "toEncrypt");
+            }
 
             //non-secret payload optional
             nonSecretPayload = nonSecretPayload ?? new byte[] { };
@@ -145,7 +161,7 @@ namespace ZefieLib
             byte[] cipherText;
             byte[] iv;
 
-            using (var aes = new AesManaged
+            using (AesManaged aes = new AesManaged
             {
                 KeySize = KeyBitSize,
                 BlockSize = BlockBitSize,
@@ -158,11 +174,11 @@ namespace ZefieLib
                 aes.GenerateIV();
                 iv = aes.IV;
 
-                using (var encrypter = aes.CreateEncryptor(cryptKey, iv))
-                using (var cipherStream = new MemoryStream())
+                using (ICryptoTransform encrypter = aes.CreateEncryptor(cryptKey, iv))
+                using (MemoryStream cipherStream = new MemoryStream())
                 {
-                    using (var cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
-                    using (var binaryWriter = new BinaryWriter(cryptoStream))
+                    using (CryptoStream cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
+                    using (BinaryWriter binaryWriter = new BinaryWriter(cryptoStream))
                     {
                         //Encrypt Data
                         binaryWriter.Write(toEncrypt);
@@ -174,10 +190,10 @@ namespace ZefieLib
             }
 
             //Assemble encrypted message and add authentication
-            using (var hmac = new HMACSHA256(authKey))
-            using (var encryptedStream = new MemoryStream())
+            using (HMACSHA256 hmac = new HMACSHA256(authKey))
+            using (MemoryStream encryptedStream = new MemoryStream())
             {
-                using (var binaryWriter = new BinaryWriter(encryptedStream))
+                using (BinaryWriter binaryWriter = new BinaryWriter(encryptedStream))
                 {
                     //Prepend non-secret payload if any
                     binaryWriter.Write(nonSecretPayload);
@@ -188,7 +204,7 @@ namespace ZefieLib
                     binaryWriter.Flush();
 
                     //Authenticate all data
-                    var tag = hmac.ComputeHash(encryptedStream.ToArray());
+                    byte[] tag = hmac.ComputeHash(encryptedStream.ToArray());
                     //Postpend tag
                     binaryWriter.Write(tag);
                 }
@@ -206,10 +222,12 @@ namespace ZefieLib
         public static string Encrypt(string toEncrypt, string password, byte[] nonSecretPayload = null)
         {
             if (string.IsNullOrEmpty(toEncrypt))
+            {
                 throw new ArgumentException("What are we encrpyting?", "toEncrypt");
+            }
 
-            var plainText = Encoding.UTF8.GetBytes(toEncrypt);
-            var cipherText = Encrypt(plainText, password, nonSecretPayload);
+            byte[] plainText = Encoding.UTF8.GetBytes(toEncrypt);
+            byte[] cipherText = Encrypt(plainText, password, nonSecretPayload);
             return Convert.ToBase64String(cipherText);
         }
         /// <summary>
@@ -225,19 +243,25 @@ namespace ZefieLib
 
             //User Error Checks
             if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            {
+                throw new ArgumentException(string.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            }
 
             if (toEncrypt == null || toEncrypt.Length == 0)
+            {
                 throw new ArgumentException("What are we encrypting?", "secretMessage");
+            }
 
             if (password.Length < MinPasswordLength)
             {
                 while (password.Length < MinPasswordLength)
+                {
                     password += "\0";
+                }
             }
 
 
-            var payload = new byte[((SaltBitSize / 8) * 2) + nonSecretPayload.Length];
+            byte[] payload = new byte[((SaltBitSize / 8) * 2) + nonSecretPayload.Length];
 
             Array.Copy(nonSecretPayload, payload, nonSecretPayload.Length);
             int payloadIndex = nonSecretPayload.Length;
@@ -245,9 +269,9 @@ namespace ZefieLib
             byte[] cryptKey;
             byte[] authKey;
             //Use Random Salt to prevent pre-generated weak password attacks.
-            using (var generator = new Rfc2898DeriveBytes(password, SaltBitSize / 8, Iterations))
+            using (Rfc2898DeriveBytes generator = new Rfc2898DeriveBytes(password, SaltBitSize / 8, Iterations))
             {
-                var salt = generator.Salt;
+                byte[] salt = generator.Salt;
 
                 //Generate Keys
                 cryptKey = generator.GetBytes(KeyBitSize / 8);
@@ -259,9 +283,9 @@ namespace ZefieLib
 
             //Deriving separate key, might be less efficient than using HKDF, 
             //but now compatible with RNEncryptor which had a very similar wireformat and requires less code than HKDF.
-            using (var generator = new Rfc2898DeriveBytes(password, SaltBitSize / 8, Iterations))
+            using (Rfc2898DeriveBytes generator = new Rfc2898DeriveBytes(password, SaltBitSize / 8, Iterations))
             {
-                var salt = generator.Salt;
+                byte[] salt = generator.Salt;
 
                 //Generate Keys
                 authKey = generator.GetBytes(KeyBitSize / 8);
@@ -283,10 +307,12 @@ namespace ZefieLib
         public static string Decrypt(string toDecrypt, byte[] cryptKey, byte[] authKey, int nonSecretPayloadLength = 0)
         {
             if (string.IsNullOrWhiteSpace(toDecrypt))
+            {
                 throw new ArgumentException("What are we decrypting?", "encryptedMessage");
+            }
 
-            var cipherText = Convert.FromBase64String(toDecrypt);
-            var plainText = Decrypt(cipherText, cryptKey, authKey, nonSecretPayloadLength);
+            byte[] cipherText = Convert.FromBase64String(toDecrypt);
+            byte[] plainText = Decrypt(cipherText, cryptKey, authKey, nonSecretPayloadLength);
             return Encoding.UTF8.GetString(plainText);
         }
         /// <summary>
@@ -302,38 +328,50 @@ namespace ZefieLib
 
             //Basic Usage Error Checks
             if (cryptKey == null || cryptKey.Length != KeyBitSize / 8)
-                throw new ArgumentException(String.Format("CryptKey needs to be {0} bit!", KeyBitSize), "cryptKey");
+            {
+                throw new ArgumentException(string.Format("CryptKey needs to be {0} bit!", KeyBitSize), "cryptKey");
+            }
 
             if (authKey == null || authKey.Length != KeyBitSize / 8)
-                throw new ArgumentException(String.Format("AuthKey needs to be {0} bit!", KeyBitSize), "authKey");
+            {
+                throw new ArgumentException(string.Format("AuthKey needs to be {0} bit!", KeyBitSize), "authKey");
+            }
 
             if (toDecrypt == null || toDecrypt.Length == 0)
-                throw new ArgumentException("What are we decrypting?", "encryptedMessage");
-
-            using (var hmac = new HMACSHA256(authKey))
             {
-                var sentTag = new byte[hmac.HashSize / 8];
+                throw new ArgumentException("What are we decrypting?", "encryptedMessage");
+            }
+
+            using (HMACSHA256 hmac = new HMACSHA256(authKey))
+            {
+                byte[] sentTag = new byte[hmac.HashSize / 8];
                 //Calculate Tag
-                var calcTag = hmac.ComputeHash(toDecrypt, 0, toDecrypt.Length - sentTag.Length);
-                var ivLength = (BlockBitSize / 8);
+                byte[] calcTag = hmac.ComputeHash(toDecrypt, 0, toDecrypt.Length - sentTag.Length);
+                int ivLength = (BlockBitSize / 8);
 
                 //if message length is to small just return null
                 if (toDecrypt.Length < sentTag.Length + nonSecretPayloadLength + ivLength)
+                {
                     return null;
+                }
 
                 //Grab Sent Tag
                 Array.Copy(toDecrypt, toDecrypt.Length - sentTag.Length, sentTag, 0, sentTag.Length);
 
                 //Compare Tag with constant time comparison
-                var compare = 0;
-                for (var i = 0; i < sentTag.Length; i++)
+                int compare = 0;
+                for (int i = 0; i < sentTag.Length; i++)
+                {
                     compare |= sentTag[i] ^ calcTag[i];
+                }
 
                 //if message doesn't authenticate return null
                 if (compare != 0)
+                {
                     return null;
+                }
 
-                using (var aes = new AesManaged
+                using (AesManaged aes = new AesManaged
                 {
                     KeySize = KeyBitSize,
                     BlockSize = BlockBitSize,
@@ -343,14 +381,14 @@ namespace ZefieLib
                 {
 
                     //Grab IV from message
-                    var iv = new byte[ivLength];
+                    byte[] iv = new byte[ivLength];
                     Array.Copy(toDecrypt, nonSecretPayloadLength, iv, 0, iv.Length);
 
-                    using (var decrypter = aes.CreateDecryptor(cryptKey, iv))
-                    using (var plainTextStream = new MemoryStream())
+                    using (ICryptoTransform decrypter = aes.CreateDecryptor(cryptKey, iv))
+                    using (MemoryStream plainTextStream = new MemoryStream())
                     {
-                        using (var decrypterStream = new CryptoStream(plainTextStream, decrypter, CryptoStreamMode.Write))
-                        using (var binaryWriter = new BinaryWriter(decrypterStream))
+                        using (CryptoStream decrypterStream = new CryptoStream(plainTextStream, decrypter, CryptoStreamMode.Write))
+                        using (BinaryWriter binaryWriter = new BinaryWriter(decrypterStream))
                         {
                             //Decrypt Cipher Text from Message
                             binaryWriter.Write(
@@ -375,10 +413,12 @@ namespace ZefieLib
         public static string Decrypt(string toDecrypt, string password, int nonSecretPayloadLength = 0)
         {
             if (string.IsNullOrWhiteSpace(toDecrypt))
+            {
                 throw new ArgumentException("What are we decrypting?", "encryptedMessage");
+            }
 
-            var cipherText = Convert.FromBase64String(toDecrypt);
-            var plainText = Decrypt(cipherText, password, nonSecretPayloadLength);
+            byte[] cipherText = Convert.FromBase64String(toDecrypt);
+            byte[] plainText = Decrypt(cipherText, password, nonSecretPayloadLength);
             return Encoding.UTF8.GetString(plainText);
         }
         /// <summary>
@@ -392,19 +432,25 @@ namespace ZefieLib
         {
             //User Error Checks
             if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            {
+                throw new ArgumentException(string.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            }
 
             if (toDecrypt == null || toDecrypt.Length == 0)
+            {
                 throw new ArgumentException("What are we decrypting?!", "encryptedMessage");
+            }
 
             if (password.Length < MinPasswordLength)
             {
                 while (password.Length < MinPasswordLength)
+                {
                     password += "\0";
+                }
             }
 
-            var cryptSalt = new byte[SaltBitSize / 8];
-            var authSalt = new byte[SaltBitSize / 8];
+            byte[] cryptSalt = new byte[SaltBitSize / 8];
+            byte[] authSalt = new byte[SaltBitSize / 8];
 
             //Grab Salt from Non-Secret Payload
             Array.Copy(toDecrypt, nonSecretPayloadLength, cryptSalt, 0, cryptSalt.Length);
@@ -414,12 +460,12 @@ namespace ZefieLib
             byte[] authKey;
 
             //Generate crypt key
-            using (var generator = new Rfc2898DeriveBytes(password, cryptSalt, Iterations))
+            using (Rfc2898DeriveBytes generator = new Rfc2898DeriveBytes(password, cryptSalt, Iterations))
             {
                 cryptKey = generator.GetBytes(KeyBitSize / 8);
             }
             //Generate auth key
-            using (var generator = new Rfc2898DeriveBytes(password, authSalt, Iterations))
+            using (Rfc2898DeriveBytes generator = new Rfc2898DeriveBytes(password, authSalt, Iterations))
             {
                 authKey = generator.GetBytes(KeyBitSize / 8);
             }
@@ -493,7 +539,7 @@ namespace ZefieLib
         {
             FileStream f = System.IO.File.OpenRead(filename);
             byte[] data = new byte[f.Length];
-            f.Read(data, 0, (int)f.Length);
+            _ = f.Read(data, 0, (int)f.Length);
             f.Close();
             return Decrypt(data, cryptKey, authKey, nonSecretPayloadLength);
         }
@@ -510,7 +556,7 @@ namespace ZefieLib
         {
             FileStream f = System.IO.File.OpenRead(filename);
             byte[] data = new byte[f.Length];
-            f.Read(data, 0, (int)f.Length);
+            _ = f.Read(data, 0, (int)f.Length);
             f.Close();
             return Decrypt(data, password, nonSecretPayloadLength);
         }
@@ -524,7 +570,9 @@ namespace ZefieLib
             public static string SHA512(byte[] data)
             {
                 using (SHA512 shaM = new SHA512Managed())
-                    return ZefieLib.Data.ByteToHex(shaM.ComputeHash(data));
+                {
+                    return ZefieLib.Data.BytesToHex(shaM.ComputeHash(data));
+                }
             }
             /// <summary>
             /// Computes a SHA512 hash
@@ -538,7 +586,7 @@ namespace ZefieLib
                     int offset = 0;
                     byte[] block = new byte[ZefieLib.Data.BlockSize];
                     byte[] hash;
-                    using (var f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
+                    using (BufferedStream f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
                     {
                         using (SHA512 shaM = new SHA512Managed())
                         {
@@ -552,15 +600,17 @@ namespace ZefieLib
                             int remain = (int)(f.Length - (long)offset);
                             block = new byte[remain];
                             f.Position = offset;
-                            f.Read(block, 0, remain);
-                            shaM.TransformFinalBlock(block, 0, block.Length);
+                            _ = f.Read(block, 0, remain);
+                            _ = shaM.TransformFinalBlock(block, 0, block.Length);
                             hash = shaM.Hash;
                         }
                     }
-                    return ZefieLib.Data.ByteToHex(hash);
+                    return ZefieLib.Data.BytesToHex(hash);
                 }
                 else
+                {
                     return SHA512(Encoding.UTF8.GetBytes(s));
+                }
             }
             /// <summary>
             /// Computes a SHA384 hash
@@ -570,7 +620,9 @@ namespace ZefieLib
             public static string SHA384(byte[] data)
             {
                 using (SHA384 shaM = new SHA384Managed())
-                    return ZefieLib.Data.ByteToHex(shaM.ComputeHash(data));
+                {
+                    return ZefieLib.Data.BytesToHex(shaM.ComputeHash(data));
+                }
             }
             /// <summary>
             /// Computes a SHA384 hash
@@ -584,7 +636,7 @@ namespace ZefieLib
                     int offset = 0;
                     byte[] block = new byte[ZefieLib.Data.BlockSize];
                     byte[] hash;
-                    using (var f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
+                    using (BufferedStream f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
                     {
                         using (SHA384 shaM = new SHA384Managed())
                         {
@@ -598,15 +650,17 @@ namespace ZefieLib
                             int remain = (int)(f.Length - (long)offset);
                             block = new byte[remain];
                             f.Position = offset;
-                            f.Read(block, 0, remain);
-                            shaM.TransformFinalBlock(block, 0, block.Length);
+                            _ = f.Read(block, 0, remain);
+                            _ = shaM.TransformFinalBlock(block, 0, block.Length);
                             hash = shaM.Hash;
                         }
                     }
-                    return ZefieLib.Data.ByteToHex(hash);
+                    return ZefieLib.Data.BytesToHex(hash);
                 }
                 else
+                {
                     return SHA384(Encoding.UTF8.GetBytes(s));
+                }
             }
             /// <summary>
             /// Computes a SHA256 hash
@@ -616,7 +670,9 @@ namespace ZefieLib
             public static string SHA256(byte[] data)
             {
                 using (SHA256 shaM = new SHA256Managed())
-                    return ZefieLib.Data.ByteToHex(shaM.ComputeHash(data));
+                {
+                    return ZefieLib.Data.BytesToHex(shaM.ComputeHash(data));
+                }
             }
             /// <summary>
             /// Computes a SHA256 hash
@@ -630,7 +686,7 @@ namespace ZefieLib
                     int offset = 0;
                     byte[] block = new byte[ZefieLib.Data.BlockSize];
                     byte[] hash;
-                    using (var f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
+                    using (BufferedStream f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
                     {
                         using (SHA256 shaM = new SHA256Managed())
                         {
@@ -644,15 +700,17 @@ namespace ZefieLib
                             int remain = (int)(f.Length - (long)offset);
                             block = new byte[remain];
                             f.Position = offset;
-                            f.Read(block, 0, remain);
-                            shaM.TransformFinalBlock(block, 0, block.Length);
+                            _ = f.Read(block, 0, remain);
+                            _ = shaM.TransformFinalBlock(block, 0, block.Length);
                             hash = shaM.Hash;
                         }
                     }
-                    return ZefieLib.Data.ByteToHex(hash);
+                    return ZefieLib.Data.BytesToHex(hash);
                 }
                 else
+                {
                     return SHA256(Encoding.UTF8.GetBytes(s));
+                }
             }
             /// <summary>
             /// Computes a SHA1 hash
@@ -662,7 +720,9 @@ namespace ZefieLib
             public static string SHA1(byte[] data)
             {
                 using (SHA1 shaM = new SHA1Managed())
-                    return ZefieLib.Data.ByteToHex(shaM.ComputeHash(data));
+                {
+                    return ZefieLib.Data.BytesToHex(shaM.ComputeHash(data));
+                }
             }
             /// <summary>
             /// Computes a SHA1 hash
@@ -676,7 +736,7 @@ namespace ZefieLib
                     int offset = 0;
                     byte[] block = new byte[ZefieLib.Data.BlockSize];
                     byte[] hash;
-                    using (var f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
+                    using (BufferedStream f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
                     {
                         using (SHA1 shaM = new SHA1Managed())
                         {
@@ -690,15 +750,17 @@ namespace ZefieLib
                             int remain = (int)(f.Length - (long)offset);
                             block = new byte[remain];
                             f.Position = offset;
-                            f.Read(block, 0, remain);
-                            shaM.TransformFinalBlock(block, 0, block.Length);
+                            _ = f.Read(block, 0, remain);
+                            _ = shaM.TransformFinalBlock(block, 0, block.Length);
                             hash = shaM.Hash;
                         }
                     }
-                    return ZefieLib.Data.ByteToHex(hash);
+                    return ZefieLib.Data.BytesToHex(hash);
                 }
                 else
+                {
                     return SHA1(Encoding.UTF8.GetBytes(s));
+                }
             }
             /// <summary>
             /// Computes a MD5 hash
@@ -708,7 +770,9 @@ namespace ZefieLib
             public static string MD5(byte[] data)
             {
                 using (MD5 md5 = new MD5CryptoServiceProvider())
-                    return ZefieLib.Data.ByteToHex(md5.ComputeHash(data));
+                {
+                    return ZefieLib.Data.BytesToHex(md5.ComputeHash(data));
+                }
             }
             /// <summary>
             /// Computes a MD5 hash
@@ -722,7 +786,7 @@ namespace ZefieLib
                     int offset = 0;
                     byte[] block = new byte[ZefieLib.Data.BlockSize];
                     byte[] hash;
-                    using (var f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
+                    using (BufferedStream f = new BufferedStream(new FileStream(s, FileMode.Open, FileAccess.Read)))
                     {
                         using (MD5 md5 = new MD5CryptoServiceProvider())
                         {
@@ -736,15 +800,17 @@ namespace ZefieLib
                             int remain = (int)(f.Length - (long)offset);
                             block = new byte[remain];
                             f.Position = offset;
-                            f.Read(block, 0, remain);
-                            md5.TransformFinalBlock(block, 0, block.Length);
+                            _ = f.Read(block, 0, remain);
+                            _ = md5.TransformFinalBlock(block, 0, block.Length);
                             hash = md5.Hash;
                         }
                     }
-                    return ZefieLib.Data.ByteToHex(hash);
+                    return ZefieLib.Data.BytesToHex(hash);
                 }
                 else
+                {
                     return MD5(Encoding.UTF8.GetBytes(s));
+                }
             }
 
         }

@@ -36,7 +36,7 @@ namespace ZefieLib
             // If the destination directory doesn't exist, create it. 
             if (!System.IO.Directory.Exists(destDirName))
             {
-                System.IO.Directory.CreateDirectory(destDirName);
+                _ = System.IO.Directory.CreateDirectory(destDirName);
             }
 
             // Get the files in the directory and copy them to the new location.
@@ -44,7 +44,7 @@ namespace ZefieLib
             foreach (FileInfo file in files)
             {
                 string temppath = System.IO.Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
+                _ = file.CopyTo(temppath, false);
             }
 
             // If copying subdirectories, copy them and their contents to new location. 
@@ -53,7 +53,7 @@ namespace ZefieLib
                 foreach (DirectoryInfo subdir in dirs)
                 {
                     string temppath = System.IO.Path.Combine(destDirName, subdir.Name);
-                    Directory.Copy(subdir.FullName, temppath, copySubDirs);
+                    Copy(subdir.FullName, temppath, copySubDirs);
                 }
             }
         }
@@ -69,13 +69,16 @@ namespace ZefieLib
             {
                 string r = "";
                 for (int i = 0; i < supportedExtensions.Count(); i++)
+                {
                     r += supportedExtensions[i] + "|";
-
+                }
                 r = r.TrimEnd('|');
-                if (String.IsNullOrEmpty(file))
+                if (string.IsNullOrEmpty(file))
+                {
                     return false;
+                }
                 Regex ser = new Regex(@"\.(" + r + ")", RegexOptions.IgnoreCase);
-                return ser.IsMatch(System.IO.Path.GetExtension(file) ?? String.Empty);
+                return ser.IsMatch(System.IO.Path.GetExtension(file) ?? string.Empty);
             }
             return true;
         }
@@ -90,43 +93,47 @@ namespace ZefieLib
         /// <returns>Array of files that match the search pattern (if any), and Zefie.Directory.supportedExtensions</returns>
         public static string[] GetFiles(string path, string search_string = null, bool sort = true, bool recursive = false)
         {
-            if (!System.IO.Directory.Exists(path))
-                return null;
-
-
-            if (recursive)
+            if (System.IO.Directory.Exists(path))
             {
-                List<string> fsr = new List<string>();
-                foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, true, true))
+                if (recursive)
                 {
-                    try { fsr.AddRange(GetFiles(dir, search_string, sort)); }
-                    catch { };
+                    List<string> fsr = new List<string>();
+                    foreach (string dir in GetDirectories(path, null, true, true))
+                    {
+                        try { fsr.AddRange(GetFiles(dir, search_string, sort)); }
+                        catch { };
+                    }
+                    return fsr.ToArray();
                 }
-                return fsr.ToArray();
-            }
 
-            SearchOption so = SearchOption.TopDirectoryOnly;
-            string[] fs = null;
-            if (sort)
-            {
-                if (search_string != null)
+                SearchOption so = SearchOption.TopDirectoryOnly;
+                string[] fs = null;
+                if (sort)
+                {
+                    if (search_string != null)
+                    {
+                        Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
+                        fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    }
+                    else
+                    {
+                        fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).OrderByAlphaNumeric().ToArray();
+                    }
+                }
+                else if (search_string != null)
                 {
                     Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).ToArray();
                 }
                 else
-                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).OrderByAlphaNumeric().ToArray();
-            }
-            else
-                if (search_string != null)
-            {
-                Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)", RegexOptions.IgnoreCase);
-                fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).Where(a => r.Match(a).Success).ToArray();
-            }
-            else
-                fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).ToArray();
+                {
+                    fs = System.IO.Directory.GetFiles(path, "*", so).Where(IsSupported).ToArray();
+                }
 
-            return fs;
+                return fs;
+            }
+
+            return null;
         }
         /// <summary>
         /// An extension of System.IO.Directory.GetDirectories, this offers a natural sorting algorithm, and RegEx searching.
@@ -138,43 +145,49 @@ namespace ZefieLib
         /// <returns>Array of directories that match the search pattern (if any)</returns>
         public static string[] GetDirectories(string path, string search_string = null, bool sort = true, bool recursive = false)
         {
-            if (!System.IO.Directory.Exists(path))
-                return null;
-
-            if (recursive)
+            if (System.IO.Directory.Exists(path))
             {
-                List<string> dsr = new List<string>();
-                foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, false, false))
+                if (recursive)
                 {
-                    dsr.Add(dir);
-                    try { dsr.AddRange(GetDirectories(dir, search_string, sort, true)); }
-                    catch { };
+                    List<string> dsr = new List<string>();
+                    foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, false, false))
+                    {
+                        dsr.Add(dir);
+                        try { dsr.AddRange(GetDirectories(dir, search_string, sort, true)); }
+                        catch { };
+                    }
+                    return dsr.ToArray();
                 }
-                return dsr.ToArray();
-            }
 
-            SearchOption so = SearchOption.TopDirectoryOnly;
-            string[] ds = null;
-            if (sort)
-            {
-                if (search_string != null)
+                SearchOption so = SearchOption.TopDirectoryOnly;
+                string[] ds = null;
+                if (sort)
                 {
-                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    if (search_string != null)
+                    {
+                        Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
+                        ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).OrderByAlphaNumeric().ToArray();
+                    }
+                    else
+                    {
+                        ds = System.IO.Directory.GetDirectories(path, "*", so).OrderByAlphaNumeric().ToArray();
+                    }
                 }
                 else
-                    ds = System.IO.Directory.GetDirectories(path, "*", so).OrderByAlphaNumeric().ToArray();
-            }
-            else
-                if (search_string != null)
-            {
-                Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
-                ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).ToArray();
-            }
-            else
-                ds = System.IO.Directory.GetDirectories(path, "*", so).ToArray();
+                    if (search_string != null)
+                {
+                    Regex r = new Regex("(?i)" + search_string.Replace("*", ".*") + "(?-i)");
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).Where(a => r.Match(a).Success).ToArray();
+                }
+                else
+                {
+                    ds = System.IO.Directory.GetDirectories(path, "*", so).ToArray();
+                }
 
-            return ds;
+                return ds;
+            }
+
+            return null;
         }
 
         internal static IEnumerable<string> OrderByAlphaNumeric(this IEnumerable<string> source)

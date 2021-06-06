@@ -5,6 +5,8 @@ namespace ZefieLib
 {
     public class Strings
     {
+        private const string alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
         /// <summary>
         /// Generates a hexadecimal string
         /// </summary>
@@ -20,12 +22,12 @@ namespace ZefieLib
         /// <param name="length">Number of characters</param>
         /// <param name="chars">Characters to use in generation</param>
         /// <returns>A random string of characters</returns>
-        public static string GenerateString(int length, string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        public static string GenerateString(int length, string chars = alphanumeric)
         {
-            var random = new Random(Cryptography.GenerateCryptoNumber());
-            var result = new string(
+            Random random = new Random(Cryptography.GenerateCryptoNumber());
+            string result = new string(
                 Enumerable.Repeat(chars, length)
-                          .Select(s => s[ZefieLib.Math.Random(s.Length)])
+                          .Select(s => s[Math.Random(s.Length)])
                           .ToArray());
             return result;
         }
@@ -37,7 +39,7 @@ namespace ZefieLib
         /// <returns>A random string of characters</returns>
         public static string GenerateString(int length, char[] append)
         {
-            return GenerateString(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" + new String(append));
+            return GenerateString(length, alphanumeric + new string(append));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ZefieLib
         {
             if (f.InvokeRequired)
             {
-                f.Invoke(new MethodInvoker(delegate { f.Activate(); }));
+                _ = f.Invoke(new MethodInvoker(delegate { f.Activate(); }));
             }
             else
             {
@@ -22,7 +22,7 @@ namespace ZefieLib
         {
             if (cb.InvokeRequired)
             {
-                cb.Invoke(new MethodInvoker(delegate { cb.SelectedIndex = index; }));
+                _ = cb.Invoke(new MethodInvoker(delegate { cb.SelectedIndex = index; }));
             }
             else
             {
@@ -34,7 +34,7 @@ namespace ZefieLib
         {
             if (b.InvokeRequired)
             {
-                b.Invoke(new MethodInvoker(delegate { b.Enabled = enabled; }));
+                _ = b.Invoke(new MethodInvoker(delegate { b.Enabled = enabled; }));
             }
             else
             {
@@ -46,11 +46,11 @@ namespace ZefieLib
         {
             if (b.InvokeRequired)
             {
-                b.Invoke(new MethodInvoker(delegate
-                {
-                    b.Image.Dispose();
-                    b.Image = image;
-                }));
+                _ = b.Invoke(new MethodInvoker(delegate
+                  {
+                      b.Image.Dispose();
+                      b.Image = image;
+                  }));
             }
             else
             {
@@ -63,7 +63,7 @@ namespace ZefieLib
         {
             if (l.InvokeRequired)
             {
-                l.Invoke(new MethodInvoker(delegate { l.Text = text; }));
+                _ = l.Invoke(new MethodInvoker(delegate { l.Text = text; }));
             }
             else
             {
@@ -75,7 +75,7 @@ namespace ZefieLib
         {
             if (l.GetCurrentParent().InvokeRequired)
             {
-                l.GetCurrentParent().Invoke(new MethodInvoker(delegate { l.Text = text; }));
+                _ = l.GetCurrentParent().Invoke(new MethodInvoker(delegate { l.Text = text; }));
             }
             else
             {
@@ -87,7 +87,7 @@ namespace ZefieLib
         {
             if (rtb.InvokeRequired)
             {
-                rtb.Invoke(new MethodInvoker(delegate { rtb.Text = text; }));
+                _ = rtb.Invoke(new MethodInvoker(delegate { rtb.Text = text; }));
             }
             else
             {
@@ -99,7 +99,7 @@ namespace ZefieLib
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { tb.Text = text; }));
+                _ = tb.Invoke(new MethodInvoker(delegate { tb.Text = text; }));
             }
             else
             {
@@ -113,7 +113,7 @@ namespace ZefieLib
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { tb.Select(start, length); }));
+                _ = tb.Invoke(new MethodInvoker(delegate { tb.Select(start, length); }));
             }
             else
             {
@@ -125,7 +125,7 @@ namespace ZefieLib
         {
             if (rtb.InvokeRequired)
             {
-                rtb.Invoke(new MethodInvoker(delegate { rtb.Select(start, length); }));
+                _ = rtb.Invoke(new MethodInvoker(delegate { rtb.Select(start, length); }));
             }
             else
             {
@@ -138,7 +138,7 @@ namespace ZefieLib
             int l = 0;
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { l = tb.TextLength; }));
+                _ = tb.Invoke(new MethodInvoker(delegate { l = tb.TextLength; }));
             }
             else
             {
@@ -152,7 +152,7 @@ namespace ZefieLib
             int l = 0;
             if (rtb.InvokeRequired)
             {
-                rtb.Invoke(new MethodInvoker(delegate { l = rtb.TextLength; }));
+                _ = rtb.Invoke(new MethodInvoker(delegate { l = rtb.TextLength; }));
             }
             else
             {
@@ -165,7 +165,7 @@ namespace ZefieLib
         {
             if (rtb.InvokeRequired)
             {
-                rtb.Invoke(new MethodInvoker(delegate { rtb.AppendText(text); }));
+                _ = rtb.Invoke(new MethodInvoker(delegate { rtb.AppendText(text); }));
             }
             else
             {
@@ -177,7 +177,7 @@ namespace ZefieLib
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { tb.AppendText(text); }));
+                _ = tb.Invoke(new MethodInvoker(delegate { tb.AppendText(text); }));
             }
             else
             {
@@ -189,7 +189,7 @@ namespace ZefieLib
         {
             if (tb.InvokeRequired)
             {
-                tb.Invoke(new MethodInvoker(delegate { tb.ScrollToCaret(); }));
+                _ = tb.Invoke(new MethodInvoker(delegate { tb.ScrollToCaret(); }));
             }
             else
             {
@@ -201,7 +201,7 @@ namespace ZefieLib
         {
             if (rtb.InvokeRequired)
             {
-                rtb.Invoke(new MethodInvoker(delegate { rtb.ScrollToCaret(); }));
+                _ = rtb.Invoke(new MethodInvoker(delegate { rtb.ScrollToCaret(); }));
             }
             else
             {
@@ -214,7 +214,7 @@ namespace ZefieLib
             string value = null;
             if (l.InvokeRequired)
             {
-                l.Invoke(new MethodInvoker(delegate { value = l.Text; }));
+                _ = l.Invoke(new MethodInvoker(delegate { value = l.Text; }));
             }
             else
             {
@@ -229,7 +229,7 @@ namespace ZefieLib
             {
                 if (t.InvokeRequired)
                 {
-                    t.Invoke(new MethodInvoker(delegate { t.Value = value; }));
+                    _ = t.Invoke(new MethodInvoker(delegate { t.Value = value; }));
                 }
                 else
                 {
@@ -244,7 +244,7 @@ namespace ZefieLib
             {
                 if (t.InvokeRequired)
                 {
-                    t.Invoke(new MethodInvoker(delegate { t.Value = value; }));
+                    _ = t.Invoke(new MethodInvoker(delegate { t.Value = value; }));
                 }
                 else
                 {
@@ -257,7 +257,7 @@ namespace ZefieLib
         {
             if (t.InvokeRequired)
             {
-                t.Invoke(new MethodInvoker(delegate
+                _ = t.Invoke(new MethodInvoker(delegate
                 {
                     t.Maximum = max;
                     t.Value = value;
@@ -275,7 +275,7 @@ namespace ZefieLib
             int value = -1;
             if (t.InvokeRequired)
             {
-                t.Invoke(new MethodInvoker(delegate { value = t.Value; }));
+                _ = t.Invoke(new MethodInvoker(delegate { value = t.Value; }));
             }
             else
             {
@@ -289,7 +289,7 @@ namespace ZefieLib
             int value = -1;
             if (t.InvokeRequired)
             {
-                t.Invoke(new MethodInvoker(delegate { value = t.SelectedIndex; }));
+                _ = t.Invoke(new MethodInvoker(delegate { value = t.SelectedIndex; }));
             }
             else
             {
@@ -302,7 +302,7 @@ namespace ZefieLib
             string value = "";
             if (t.InvokeRequired)
             {
-                t.Invoke(new MethodInvoker(delegate { value = t.Text; }));
+                _ = t.Invoke(new MethodInvoker(delegate { value = t.Text; }));
             }
             else
             {
@@ -315,7 +315,7 @@ namespace ZefieLib
             bool value = false;
             if (t.InvokeRequired)
             {
-                t.Invoke(new MethodInvoker(delegate { value = t.Checked; }));
+                _ = t.Invoke(new MethodInvoker(delegate { value = t.Checked; }));
             }
             else
             {
@@ -328,7 +328,7 @@ namespace ZefieLib
         {
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { c.Checked = @checked; }));
+                _ = c.Invoke(new MethodInvoker(delegate { c.Checked = @checked; }));
             }
             else
             {
@@ -340,7 +340,7 @@ namespace ZefieLib
         {
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { c.Visible = visible; }));
+                _ = c.Invoke(new MethodInvoker(delegate { c.Visible = visible; }));
             }
             else
             {
@@ -352,7 +352,7 @@ namespace ZefieLib
         {
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { c.Enabled = enabled; }));
+                _ = c.Invoke(new MethodInvoker(delegate { c.Enabled = enabled; }));
             }
             else
             {
@@ -364,7 +364,7 @@ namespace ZefieLib
         {
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { c.Size = s; }));
+                _ = c.Invoke(new MethodInvoker(delegate { c.Size = s; }));
             }
             else
             {
@@ -377,7 +377,7 @@ namespace ZefieLib
             Size s = new Size();
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { s = c.Size; }));
+                _ = c.Invoke(new MethodInvoker(delegate { s = c.Size; }));
             }
             else
             {
@@ -391,7 +391,7 @@ namespace ZefieLib
             Size s = new Size();
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { s = c.ClientSize; }));
+                _ = c.Invoke(new MethodInvoker(delegate { s = c.ClientSize; }));
             }
             else
             {
@@ -405,7 +405,7 @@ namespace ZefieLib
             Padding p = new Padding();
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { p = c.Padding; }));
+                _ = c.Invoke(new MethodInvoker(delegate { p = c.Padding; }));
             }
             else
             {
@@ -419,7 +419,7 @@ namespace ZefieLib
             Padding p = new Padding();
             if (c.InvokeRequired)
             {
-                c.Invoke(new MethodInvoker(delegate { p = c.Margin; }));
+                _ = c.Invoke(new MethodInvoker(delegate { p = c.Margin; }));
             }
             else
             {
@@ -445,8 +445,8 @@ namespace ZefieLib
                         SetStyle(ControlStyles.UserPaint, true);
                         Colors = new Color[2]
                         {
-                BackColor,
-                ForeColor
+                            BackColor,
+                            ForeColor
                         };
                     }
                 }
@@ -476,11 +476,16 @@ namespace ZefieLib
                             Rectangle rect = new Rectangle(0, 0, Width, Height);
 
                             if (ProgressBarRenderer.IsSupported)
+                            {
                                 ProgressBarRenderer.DrawHorizontalBar(offscreen, rect);
+                            }
 
                             rect.Inflate(new Size(-inset, -inset)); // Deflate inner rect.
                             rect.Width = (int)(rect.Width * ((double)Value / Maximum));
-                            if (rect.Width == 0) rect.Width = 1; // Can't draw rec with width of 0.
+                            if (rect.Width == 0)
+                            {
+                                rect.Width = 1; // Can't draw rec with width of 0.
+                            }
 
                             LinearGradientBrush brush = new LinearGradientBrush(rect, Colors[0], Colors[1], GradientMode);
                             offscreen.FillRectangle(brush, inset, inset, rect.Width, rect.Height);

@@ -13,9 +13,9 @@ namespace ZefieLib
         /// <returns>Inverted Bitmap</returns>
         public static Bitmap InvertColors(Bitmap bitmap)
         {
-            var bitmapRead = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
-            var bitmapLength = bitmapRead.Stride * bitmapRead.Height;
-            var bitmapBGRA = new byte[bitmapLength];
+            BitmapData bitmapRead = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
+            int bitmapLength = bitmapRead.Stride * bitmapRead.Height;
+            byte[] bitmapBGRA = new byte[bitmapLength];
             Marshal.Copy(bitmapRead.Scan0, bitmapBGRA, 0, bitmapLength);
             bitmap.UnlockBits(bitmapRead);
 
@@ -27,7 +27,7 @@ namespace ZefieLib
                 //        [i + 3] = ALPHA.
             }
             Bitmap outBMP = new Bitmap(bitmap);
-            var bitmapWrite = outBMP.LockBits(new Rectangle(0, 0, outBMP.Width, outBMP.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
+            BitmapData bitmapWrite = outBMP.LockBits(new Rectangle(0, 0, outBMP.Width, outBMP.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
             Marshal.Copy(bitmapBGRA, 0, bitmapWrite.Scan0, bitmapLength);
             outBMP.UnlockBits(bitmapWrite);
             return outBMP;
@@ -41,7 +41,7 @@ namespace ZefieLib
         {
             Bitmap bitmap = new Bitmap(image);
             bitmap = InvertColors(bitmap);
-            return (Image)bitmap;
+            return bitmap;
         }
         /// <summary>
         /// Scales the image to the specified size
@@ -69,7 +69,7 @@ namespace ZefieLib
             }
 
             //return the resulting bitmap
-            return (Image)result;
+            return result;
         }
         /// <summary>
         /// Scales the image to the specified percent of the original size
@@ -79,8 +79,8 @@ namespace ZefieLib
         /// <returns>Scaled image</returns>
         public static Image Scale(Image image, double percent)
         {
-            int width = (int)Math.CalcPercentOf((double)image.Width, percent);
-            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
+            int width = (int)Math.CalcPercentOf(image.Width, percent);
+            int height = (int)Math.CalcPercentOf(image.Height, percent);
             return Scale(image, width, height);
         }
         /// <summary>
@@ -92,7 +92,7 @@ namespace ZefieLib
         public static Image Scale(Image image, int width)
         {
             double percent = Math.CalcPercent(width, image.Width);
-            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
+            int height = (int)Math.CalcPercentOf(image.Height, percent);
             return Scale(image, width, height);
         }
         /// <summary>
@@ -104,7 +104,7 @@ namespace ZefieLib
         /// <returns>Scaled bitmap</returns>
         public static Bitmap Scale(Bitmap bitmap, int width, int height)
         {
-            Image image = (Image)bitmap;
+            Image image = bitmap;
             return new Bitmap(Scale(image, width, height));
         }
         /// <summary>
@@ -115,9 +115,9 @@ namespace ZefieLib
         /// <returns>Scaled bitmap</returns>
         public static Bitmap Scale(Bitmap bitmap, double percent)
         {
-            Image image = (Image)bitmap;
-            int width = (int)Math.CalcPercentOf((double)image.Width, percent);
-            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
+            Image image = bitmap;
+            int width = (int)Math.CalcPercentOf(image.Width, percent);
+            int height = (int)Math.CalcPercentOf(image.Height, percent);
             return new Bitmap(Scale(image, width, height));
         }
         /// <summary>
@@ -128,9 +128,9 @@ namespace ZefieLib
         /// <returns>Scaled bitmap</returns>
         public static Bitmap Scale(Bitmap bitmap, int width)
         {
-            Image image = (Image)bitmap;
+            Image image = bitmap;
             double percent = Math.CalcPercent(width, image.Width);
-            int height = (int)Math.CalcPercentOf((double)image.Height, percent);
+            int height = (int)Math.CalcPercentOf(image.Height, percent);
             return new Bitmap(Scale(image, width, height));
         }
     }

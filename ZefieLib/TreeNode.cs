@@ -17,9 +17,11 @@ namespace ZefieLib
         /// <returns>The last child node created</returns>
         public static string CreateNodesByPath(System.Windows.Forms.TreeNode n, string path, Color? backColor = null, Color? foreColor = null)
         {
-            List<String> p = new List<string>();
+            List<string> p = new List<string>();
             foreach (string s in path.Split('\\'))
+            {
                 p.Add(s);
+            }
 
             p.RemoveAt(p.Count - 1);
             for (int i = 0; i < p.Count; i++)
@@ -34,7 +36,7 @@ namespace ZefieLib
                         };
                         if (backColor != null) { tmp.BackColor = (Color)backColor; }
                         if (foreColor != null) { tmp.ForeColor = (Color)foreColor; }
-                        n.Nodes.Add(tmp);
+                        _ = n.Nodes.Add(tmp);
                     }
                 }
                 else
@@ -47,7 +49,7 @@ namespace ZefieLib
                         };
                         if (backColor != null) { tmp.BackColor = (Color)backColor; }
                         if (foreColor != null) { tmp.ForeColor = (Color)foreColor; }
-                        n.Nodes.Find(p[i - 1], true)[0].Nodes.Add(tmp);
+                        _ = n.Nodes.Find(p[i - 1], true)[0].Nodes.Add(tmp);
                     }
                 }
             }

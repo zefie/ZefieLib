@@ -23,7 +23,7 @@ namespace ZefieLib
             };
             bool result = false;
             prompt.StartPosition = FormStartPosition.CenterScreen;
-            Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new System.Drawing.Size(550, 1000), Text = text };
+            Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new Size(550, 1000), Text = text };
             Size labelSize = new Size();
             using (Graphics g = textLabel.CreateGraphics())
             {
@@ -48,7 +48,7 @@ namespace ZefieLib
             prompt.Controls.Add(cancel);
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
-            prompt.ShowDialog();
+            _ = prompt.ShowDialog();
             return result;
         }
         /// <summary>
@@ -68,7 +68,7 @@ namespace ZefieLib
                 ShowInTaskbar = false,
                 StartPosition = FormStartPosition.CenterScreen
             };
-            Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new System.Drawing.Size(550, 1000), Text = text };
+            Label textLabel = new Label() { Left = 17, Top = 10, AutoSize = true, MaximumSize = new Size(550, 1000), Text = text };
             Size labelSize = new Size();
             using (Graphics g = textLabel.CreateGraphics())
             {
@@ -95,7 +95,7 @@ namespace ZefieLib
             prompt.Controls.Add(cancel);
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
-            prompt.ShowDialog();
+            _ = prompt.ShowDialog();
             return textBox.Text;
         }
         /// <summary>
@@ -105,7 +105,7 @@ namespace ZefieLib
         /// <param name="caption">Title of the dialog</param>
         public static void ShowError(string text, string caption = "Error")
         {
-            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _ = MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         /// <summary>
         /// Displays a MessageBox with an information icon and an OK button
@@ -114,7 +114,7 @@ namespace ZefieLib
         /// <param name="caption">Title of the dialog</param>
         public static void ShowMsg(string text, string caption = "Message")
         {
-            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _ = MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         /// <summary>
         /// Displays an OpenFileDialog, prompting the user to select a file
@@ -127,12 +127,18 @@ namespace ZefieLib
         {
             OpenFileDialog f = new OpenFileDialog();
             if (start_folder != null)
+            {
                 f.InitialDirectory = start_folder;
+            }
+
             if (title != null)
+            {
                 f.Title = title;
+            }
+
             f.Filter = filter;
             f.Multiselect = false;
-            f.ShowDialog();
+            _ = f.ShowDialog();
             return f.FileName;
         }
         /// <summary>
@@ -146,12 +152,18 @@ namespace ZefieLib
         {
             OpenFileDialog f = new OpenFileDialog();
             if (start_folder != null)
+            {
                 f.InitialDirectory = start_folder;
+            }
+
             if (title != null)
+            {
                 f.Title = title;
+            }
+
             f.Filter = filter;
             f.Multiselect = true;
-            f.ShowDialog();
+            _ = f.ShowDialog();
             return f.FileNames;
         }
         /// <summary>
@@ -165,11 +177,17 @@ namespace ZefieLib
         {
             SaveFileDialog f = new SaveFileDialog();
             if (start_folder != null)
+            {
                 f.InitialDirectory = start_folder;
+            }
+
             if (title != null)
+            {
                 f.Title = title;
+            }
+
             f.Filter = filter;
-            f.ShowDialog();
+            _ = f.ShowDialog();
             return f.FileName;
         }
         /// <summary>
@@ -182,9 +200,12 @@ namespace ZefieLib
         {
             FolderBrowserDialog f = new FolderBrowserDialog();
             if (title != null)
+            {
                 f.Description = title;
+            }
+
             f.ShowNewFolderButton = new_folder_button;
-            f.ShowDialog();
+            _ = f.ShowDialog();
             return f.SelectedPath;
         }
     }

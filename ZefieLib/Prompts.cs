@@ -123,18 +123,11 @@ namespace ZefieLib
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected file, or null</returns>
-        public static string BrowseOpenFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string BrowseOpenFile(string title = "", string start_folder = "", string filter = "All Files (*.*)|*.*")
         {
             OpenFileDialog f = new OpenFileDialog();
-            if (start_folder != null)
-            {
-                f.InitialDirectory = start_folder;
-            }
-
-            if (title != null)
-            {
-                f.Title = title;
-            }
+            if (start_folder != "") f.InitialDirectory = start_folder;
+            if (title != "") f.Title = title;
 
             f.Filter = filter;
             f.Multiselect = false;
@@ -148,18 +141,11 @@ namespace ZefieLib
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected files, or null</returns>
-        public static string[] BrowseOpenFiles(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string[] BrowseOpenFiles(string title = "", string start_folder = "", string filter = "All Files (*.*)|*.*")
         {
             OpenFileDialog f = new OpenFileDialog();
-            if (start_folder != null)
-            {
-                f.InitialDirectory = start_folder;
-            }
-
-            if (title != null)
-            {
-                f.Title = title;
-            }
+            if (start_folder != "") f.InitialDirectory = start_folder;
+            if (title != "")  f.Title = title;
 
             f.Filter = filter;
             f.Multiselect = true;
@@ -173,18 +159,11 @@ namespace ZefieLib
         /// <param name="start_folder">Directory to start in</param>
         /// <param name="filter">File filter</param>
         /// <returns>User selected file, or null</returns>
-        public static string BrowseSaveFile(string title = null, string start_folder = null, string filter = "All Files (*.*)|*.*")
+        public static string BrowseSaveFile(string title = "", string start_folder = "", string filter = "All Files (*.*)|*.*")
         {
             SaveFileDialog f = new SaveFileDialog();
-            if (start_folder != null)
-            {
-                f.InitialDirectory = start_folder;
-            }
-
-            if (title != null)
-            {
-                f.Title = title;
-            }
+            if (start_folder != "") f.InitialDirectory = start_folder;
+            if (title != "") f.Title = title;
 
             f.Filter = filter;
             _ = f.ShowDialog();
@@ -196,13 +175,10 @@ namespace ZefieLib
         /// <param name="title">Title of the dialog</param>
         /// <param name="new_folder_button">Show the 'New Folder' button</param>
         /// <returns>User selected folder, or null</returns>
-        public static string BrowseFolder(string title = null, bool new_folder_button = true)
+        public static string BrowseFolder(string title = "", bool new_folder_button = true)
         {
             FolderBrowserDialog f = new FolderBrowserDialog();
-            if (title != null)
-            {
-                f.Description = title;
-            }
+            if (title != "") f.Description = title;
 
             f.ShowNewFolderButton = new_folder_button;
             _ = f.ShowDialog();

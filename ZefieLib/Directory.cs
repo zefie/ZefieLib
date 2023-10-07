@@ -91,14 +91,16 @@ namespace ZefieLib
         /// <param name="sort">Use natural sorting</param>
         /// <param name="recursive">Recursively scan directories</param>
         /// <returns>Array of files that match the search pattern (if any), and Zefie.Directory.supportedExtensions</returns>
-        public static string[] GetFiles(string path, string search_string = null, bool sort = true, bool recursive = false)
+        public static string[] GetFiles(string path, string? search_string = null, bool sort = true, bool recursive = false)
         {
             if (System.IO.Directory.Exists(path))
             {
                 if (recursive)
                 {
                     List<string> fsr = new List<string>();
-                    foreach (string dir in GetDirectories(path, null, true, true))
+                    string[]? directories = GetDirectories(path, null, true, true);
+                    if (directories == null) return new string[0];
+                    foreach (string dir in directories)
                     {
                         try { fsr.AddRange(GetFiles(dir, search_string, sort)); }
                         catch { };
@@ -107,7 +109,7 @@ namespace ZefieLib
                 }
 
                 SearchOption so = SearchOption.TopDirectoryOnly;
-                string[] fs = null;
+                string[]? fs = null;
                 if (sort)
                 {
                     if (search_string != null)
@@ -133,7 +135,7 @@ namespace ZefieLib
                 return fs;
             }
 
-            return null;
+            return new string[0];
         }
         /// <summary>
         /// An extension of System.IO.Directory.GetDirectories, this offers a natural sorting algorithm, and RegEx searching.
@@ -143,24 +145,30 @@ namespace ZefieLib
         /// <param name="sort">Use natural sorting</param>
         /// <param name="recursive">Recursively scan directories</param>
         /// <returns>Array of directories that match the search pattern (if any)</returns>
-        public static string[] GetDirectories(string path, string search_string = null, bool sort = true, bool recursive = false)
+        public static string[]? GetDirectories(string path, string? search_string = null, bool sort = true, bool recursive = false)
         {
             if (System.IO.Directory.Exists(path))
             {
                 if (recursive)
                 {
                     List<string> dsr = new List<string>();
-                    foreach (string dir in ZefieLib.Directory.GetDirectories(path, null, false, false))
+                    string[]? directories = GetDirectories(path, null, false, false);
+                    if (directories == null) return new string[0];
+                    foreach (string dir in directories)
                     {
                         dsr.Add(dir);
-                        try { dsr.AddRange(GetDirectories(dir, search_string, sort, true)); }
+                        try {
+                            string[]? directories2 = GetDirectories(dir, search_string, sort, true);
+                            if (directories2 == null) return new string[0]; 
+                            dsr.AddRange(directories2);
+                        }
                         catch { };
                     }
                     return dsr.ToArray();
                 }
 
                 SearchOption so = SearchOption.TopDirectoryOnly;
-                string[] ds = null;
+                string[]? ds = null;
                 if (sort)
                 {
                     if (search_string != null)

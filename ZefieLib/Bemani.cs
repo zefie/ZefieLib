@@ -7,13 +7,13 @@ namespace ZefieLib
         /// <summary>
         /// Generates a PSun compatible eAmuse card code
         /// </summary>
-        public static string eAmuseCardGen()
+        public static string EAmuseCardGen()
         {
             return "E004" + Strings.GenerateHexString(12);
 
         }
 
-        public static string getGameName(string gamemodel)
+        public static string? GetGameName(string gamemodel)
         {
             switch (gamemodel.Substring(0,3))
             {

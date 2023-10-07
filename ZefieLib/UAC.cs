@@ -26,8 +26,15 @@ namespace ZefieLib
         /// <returns>true if successful, so you can properly know to terminate your non-admin copy</returns>
         public static bool RunAsAdministrator(string args)
         {
-            string executable = Process.GetCurrentProcess().MainModule.FileName;
-            return RunAsAdministrator(executable, args);
+            if (Data.IsNotNull(System.Diagnostics.Process.GetCurrentProcess().MainModule))
+            {
+                if (Data.IsNotNull(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
+                {
+                    string executable = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                    return RunAsAdministrator(executable, args);
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -42,12 +49,12 @@ namespace ZefieLib
             {
                 try
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo(executable)
+                    ProcessStartInfo startInfo = new ProcessStartInfo (executable)
                     {
                         Arguments = args,
                         Verb = "runas"
                     };
-                    _ = Process.Start(startInfo);
+                    _ = System.Diagnostics.Process.Start(startInfo);
                     return true;
                 }
                 catch

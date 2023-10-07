@@ -11,7 +11,7 @@ namespace ZefieLib
         /// <param name="port"></param>
         /// <param name="address">IPAdddress, defaults to localhost</param>
         /// <returns>True if the port is avaible, false if it is in use</returns>
-        public static bool IsPortAvailable(int port, IPAddress address = null)
+        public static bool IsPortAvailable(int port, IPAddress? address = null)
         {
             // 127.0.0.1
             if (address == null)

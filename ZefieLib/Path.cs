@@ -10,7 +10,7 @@ namespace ZefieLib
         /// </summary>
         /// <param name="label">Label of the drive to search for (case sensitive)</param>
         /// <returns>Drive letter in format of X:\, or null if no results</returns>
-        public static string GetDriveLetterFromLabel(string label)
+        public static string? GetDriveLetterFromLabel(string label)
         {
             foreach (DriveInfo DI in DriveInfo.GetDrives())
             {
@@ -29,7 +29,9 @@ namespace ZefieLib
             return null;
         }
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+
+        private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
         /// <summary>
         /// Creates an NTFS Symlink (Junction)
@@ -38,9 +40,11 @@ namespace ZefieLib
         /// <param name="lpTargetFileName">Location of the file to be linked to</param>
         /// <param name="dwFlags">SymbolicLink Flags (File or Directory)</param>
         /// <returns>True if successful, false if not</returns>
-        public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+        public static bool CreateSymboliclink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags) {
+            return CreateSymbolicLink(lpSymlinkFileName, lpTargetFileName, dwFlags);
+        }
 
-        public enum SymbolicLink
+    public enum SymbolicLink
         {
             File = 0,
             Directory = 1

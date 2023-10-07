@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -8,6 +9,24 @@ namespace ZefieLib
     public class Data
     {
 
+
+        /// <summary>
+        /// Detects if an object is null, and returns true if it IS NOT
+        /// </summary>
+        /// <param name="obj">object</param>
+        /// <returns>Boolean</returns>
+        public static bool IsNotNull([NotNullWhen(true)] object? obj) => obj != null;
+
+        /// <summary>
+        /// Detects if an object is null, and returns true if it IS
+        /// </summary>
+        /// <param name="obj">object</param>
+        /// <returns>Boolean</returns>
+        public static bool IsNull(object? obj)
+        {
+            return !IsNotNull(obj);
+        }
+
         public static int BlockSize = 8192;
 
         /// <summary>
@@ -15,8 +34,9 @@ namespace ZefieLib
         /// </summary>
         /// <param name="bytes">Data</param>
         /// <returns>A hexidecimal string</returns>
-        public static string BytesToHex(byte[] bytes)
+        public static string BytesToHex(byte[]? bytes)
         {
+            if (bytes == null) return "";
             StringBuilder hex = new StringBuilder(bytes.Length * 2);
             foreach (byte b in bytes)
             {
@@ -286,7 +306,7 @@ namespace ZefieLib
                 {
                     FileStream raf = File.OpenRead(file);
                     raf.Position = (_isosector * nSector);
-                    byte[] sector = new byte[_isosector];
+                    byte[]? sector = new byte[_isosector];
                     int[] sd;
                     if (RawISO9660Mode)
                     {
